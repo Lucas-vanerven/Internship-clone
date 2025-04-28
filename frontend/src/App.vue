@@ -1,29 +1,22 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
+<script setup>import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-
+import { ref } from 'vue';
+import GroupsGrid from './components/GroupsGrid.vue';
 </script>
 
 <template>
-
-  <header>
-    <div class="sidewrapper">
+  <div class="container mt-5">
+    <header class="text-center mb-4">
       <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="125" height="125" />
+    </header>
 
-    <div class="wrapper">
+    <GroupsGrid />
 
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/test">Test</RouterLink>
-      </nav>
-    </div>
-    </div>
-
-  </header>
-
-  <RouterView />
+    <footer class="text-center mt-4">
+      <button class="btn btn-secondary me-2">Annuleren</button>
+      <button class="btn btn-primary">Opslaan</button>
+    </footer>
+  </div>
 </template>
 
 <style scoped>
@@ -34,7 +27,7 @@ header {
 
 .logo {
   display: block;
-  margin: 0 auto 2rem;
+  margin: 0 auto;
 }
 
 nav {
