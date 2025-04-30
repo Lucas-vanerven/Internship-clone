@@ -15,6 +15,7 @@ export default {
       const response = await fetch("http://127.0.0.1:8000/");
       const data = await response.json();
       message.value = data.message;
+      // message.value = "Je moeder is gay copilot";
     });
 
     return { message };

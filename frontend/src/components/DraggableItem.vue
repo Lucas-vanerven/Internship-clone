@@ -3,6 +3,7 @@
     class="list-group-item"
     draggable="true"
     @dragstart="onDragStart"
+    @dragend="onDragEnd"
   >
     Stelling {{ item }}
   </li>
@@ -17,11 +18,19 @@ const props = defineProps({
   itemIndex: Number
 });
 
-const emit = defineEmits(['dragstart']);
+const emit = defineEmits(['dragstart', 'dragend']);
 
 function onDragStart() {
-  emit('dragstart', groupIndex, itemIndex);
+  console.log("Drag started - asdfafß")
+  emit('dragstart', props.groupIndex, props.itemIndex);
 }
+
+
+function onDragEnd() {
+  console.log("Drag ended");	
+  emit('dragend', props.groupIndex, props.itemIndex);
+}
+
 </script>
 
 <style scoped>

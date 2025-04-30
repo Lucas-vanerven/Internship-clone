@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: assign columns (CSS-grid) to have each group take up only a certain width -->
   <div class="card">
     <div class="card-header text-center">Groep {{ groupIndex + 1 }}</div>
     <div class="card-body">
@@ -29,11 +30,11 @@ const props = defineProps({
 const emit = defineEmits(['dragstart', 'drop']);
 
 function onDragStart(itemIndex) {
-  emit('dragstart', groupIndex, itemIndex);
+  emit('dragstart', props.groupIndex, itemIndex);
 }
 
 function onDrop() {
-  emit('drop', groupIndex);
+  emit('drop', props.groupIndex);
 }
 </script>
 

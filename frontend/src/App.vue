@@ -1,22 +1,38 @@
-<script setup>import { RouterLink, RouterView } from 'vue-router'
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import { ref } from 'vue';
-import GroupsGrid from './components/GroupsGrid.vue';
+import { ref } from 'vue'
+import GroupsGrid from './components/GroupsGrid.vue'
+import AnnulerenButton from './components/AnnulerenButton.vue'
+import OpslaanButton from './components/OpslaanButton.vue'
 </script>
 
 <template>
-  <div class="container mt-5">
-    <header class="text-center mb-4">
+  <!-- <div class="container mt-5"> -->
+    <!-- <header class="text-center mb-4">
       <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="125" height="125" />
-    </header>
+    </header> -->
+    <main>
+      <GroupsGrid />
+    </main>
+    
 
-    <GroupsGrid />
+    <!-- TODO: Center the elements with css somehow ;) in main.css -->
+    <div class="management">
+      <AnnulerenButton />
+      <OpslaanButton />
+    </div>
 
-    <footer class="text-center mt-4">
-      <button class="btn btn-secondary me-2">Annuleren</button>
-      <button class="btn btn-primary">Opslaan</button>
+    <footer>
+      <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="125" height="125" />
     </footer>
-  </div>
+
+    <div class="actions">
+      <!-- TODO: Replace these buttons with the correct ones -->
+      <AnnulerenButton />
+      <OpslaanButton />
+    </div>
+  <!-- </div> -->
 </template>
 
 <style scoped>
@@ -58,7 +74,6 @@ nav a:first-of-type {
 .sidewrapper {
   grid-template-rows: 300px 600px;
 }
-
 
 @media (min-width: 1024px) {
   header {

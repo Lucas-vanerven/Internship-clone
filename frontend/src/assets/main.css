@@ -5,7 +5,7 @@
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
-  grid-template-rows: auto 1fr auto;
+  /* grid-template-rows: auto 1fr auto; */
 }
 
 a,
@@ -29,8 +29,33 @@ a,
   }
 
   #app { /* als pagina groter dan of gelijk is aan 1024 pixels, additional opmaak regels */
-    display: grid;
-    grid-template-columns: 1fr 3fr; /* Bepaalt hoeveel kolommen er mogelijk zijn op een pagina*/
-    padding: 0 2rem;
+        display: grid;
+        grid-template-areas: 
+        "main main main"
+        "management footer actions";
+        grid-template-columns : 1fr 1fr 1fr;
+        grid-template-rows: 1fr auto;
+        min-height: 100vh;
+    /* padding: 0 2rem; */
   }
+
+main {
+  grid-area: main;
+  border: 20px solid hsla(0, 0%, 100%, 0.2);
+}
+
+footer {
+  grid-area: footer;
+  border: 20px solid hsla(0, 0%, 100%, 0.2);
+}
+
+.management {
+  grid-area: management;
+  border: 20px solid hsla(0, 0%, 100%, 0.2);
+}
+
+.actions {
+  grid-area: actions;
+  border: 20px solid hsla(0, 0%, 100%, 0.2);
+}
 }
