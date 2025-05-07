@@ -10,7 +10,7 @@ import RemoveGroup from './components/RemoveGroup.vue'
 </script>
 
 <template>
-  <!-- <div class="container mt-5"> -->
+  
     <!-- <header class="text-center mb-4">
       <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="125" height="125" />
     </header> -->
@@ -26,15 +26,14 @@ import RemoveGroup from './components/RemoveGroup.vue'
     </div>
 
     <footer>
-      <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="125" height="125" />
+      <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="75" height="75" />
     </footer>
 
     <div class="actions">
-      <!-- TODO: Replace these buttons with the correct ones -->
       <AnnulerenButton />
       <OpslaanButton />
     </div>
-  <!-- </div> -->
+ 
 </template>
 
 <style scoped>

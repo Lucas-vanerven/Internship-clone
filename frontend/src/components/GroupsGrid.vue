@@ -49,7 +49,9 @@ function onDrop(targetGroupIndex) {
 
 <style scoped>
 .row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  gap: 1rem;
 }
 </style>
