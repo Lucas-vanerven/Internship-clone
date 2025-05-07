@@ -10,4 +10,5 @@ export default {
 
 <style scoped>
 /* Add any specific styles for the Annuleren button here */
+
 </style>

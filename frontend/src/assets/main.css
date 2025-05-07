@@ -27,6 +27,19 @@ a,
     display: flex;
     place-items: center;
   }
+}
+
+@media (min-width: 768px) {
+  #app {
+    grid-template-areas:
+      "main"
+      "management"
+      "actions"
+      "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto auto auto;
+    min-height: 100vh;
+  } 
 
   #app { /* als pagina groter dan of gelijk is aan 1024 pixels, additional opmaak regels */
         display: grid;
@@ -46,16 +59,27 @@ main {
 
 footer {
   grid-area: footer;
-  border: 20px solid hsla(0, 0%, 100%, 0.2);
+  /* border: 20px solid hsla(0, 0%, 100%, 0.2); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .management {
   grid-area: management;
-  border: 20px solid hsla(0, 0%, 100%, 0.2);
+  /* border: 20px solid hsla(0, 0%, 100%, 0.2); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .actions {
   grid-area: actions;
-  border: 20px solid hsla(0, 0%, 100%, 0.2);
+  /* border: 20px solid hsla(0, 0%, 100%, 0.2); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 }
+
+

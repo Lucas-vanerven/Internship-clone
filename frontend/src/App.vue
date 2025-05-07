@@ -5,6 +5,8 @@ import { ref } from 'vue'
 import GroupsGrid from './components/GroupsGrid.vue'
 import AnnulerenButton from './components/AnnulerenButton.vue'
 import OpslaanButton from './components/OpslaanButton.vue'
+import CreateGroup from './components/CreateGroup.vue'
+import RemoveGroup from './components/RemoveGroup.vue'
 </script>
 
 <template>
@@ -19,8 +21,8 @@ import OpslaanButton from './components/OpslaanButton.vue'
 
     <!-- TODO: Center the elements with css somehow ;) in main.css -->
     <div class="management">
-      <AnnulerenButton />
-      <OpslaanButton />
+      <CreateGroup />
+      <RemoveGroup />
     </div>
 
     <footer>
