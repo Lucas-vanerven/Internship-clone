@@ -26,9 +26,11 @@ function onDragStart() {
 }
 
 
-function onDragEnd() {
-  console.log("Drag ended");	
-  emit('dragend', props.groupIndex, props.itemIndex);
+function onDragEnd(event) {
+  console.log("Drag ended");
+  const target = event.relatedTarget?.closest('ul'); // Use relatedTarget to get the drop target
+  console.log("Dropped on target:", target);
+  emit('dragend', props.groupIndex, props.itemIndex, target);
 }
 
 </script>

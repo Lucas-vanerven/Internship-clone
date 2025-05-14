@@ -27,7 +27,6 @@ const draggedItem = ref(null);
 function onDragStart(groupIndex, itemIndex) {
   // Set the dragged item to the group and item index
   draggedItem.value = { groupIndex, itemIndex };
-  
 }
 
 function onDrop(targetGroupIndex) {

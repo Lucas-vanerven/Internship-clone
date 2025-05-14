@@ -1,25 +1,17 @@
 <template>
-  
   <div class="card">
-    <div class="card-header text-center">Groep {{ groupIndex + 1 }}</div>
+    <TableHeader :groupIndex="groupIndex" />
     <div class="card-body">
-      <ul class="list-group" @dragover.prevent @drop="onDrop">
-        <DraggableItem
-          v-for="(item, itemIndex) in group"
-          :key="itemIndex"
-          :item="item"
-          :groupIndex="groupIndex"
-          :itemIndex="itemIndex"
-          @dragstart="onDragStart"
-        />
-      </ul>
+      <TableBody :group="group" :groupIndex="groupIndex" @dragstart="onDragStart" @drop="onDrop" />
     </div>
-    <div class="card-footer text-center">Score: X</div>
+    <TableFooter />
   </div>
 </template>
 
 <script setup>
-import DraggableItem from './DraggableItem.vue';
+import TableHeader from './table/TableHeader.vue';
+import TableBody from './table/TableBody.vue';
+import TableFooter from './table/TableFooter.vue';
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
@@ -41,5 +33,6 @@ function onDrop() {
 <style scoped>
 .card {
   margin-bottom: 1rem;
+  min-height: 80vh;;
 }
 </style>
