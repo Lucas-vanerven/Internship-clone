@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO: assign columns (CSS-grid) to have each group take up only a certain width -->
+  
   <div class="card">
     <div class="card-header text-center">Groep {{ groupIndex + 1 }}</div>
     <div class="card-body">
