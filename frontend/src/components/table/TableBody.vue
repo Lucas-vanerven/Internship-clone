@@ -22,8 +22,8 @@ const props = defineProps({
 
 const emit = defineEmits(['dragstart', 'drop']);
 
-function onDragStart(itemIndex) {
-  emit('dragstart', props.groupIndex, itemIndex);
+function onDragStart(groupIndex, itemIndex) {
+  emit('dragstart', groupIndex, itemIndex);
 }
 
 function onDrop() {
