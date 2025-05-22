@@ -8,22 +8,18 @@ import RemoveGroup from '../components/RemoveGroup.vue'
 
 <template>
   
-    <!-- <header class="text-center mb-4">
-      <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="125" height="125" />
-    </header> -->
     <main>
       <GroupsGrid />
     </main>
     
 
-    <!-- TODO: Center the elements with css somehow ;) in main.css -->
     <div class="management">
-      <CreateGroup />
-      <RemoveGroup />
+      <!-- <CreateGroup />
+      <RemoveGroup /> -->
     </div>
 
     <footer>
-      <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="75" height="75" />
+      <img alt="Vue logo" class="logo" src="@/assets/AR.ico" width="60" height="60" />
     </footer>
 
     <div class="actions">
@@ -39,9 +35,21 @@ header {
   max-height: 100vh;
 }
 
+
 .logo {
   display: block;
   margin: 0 auto;
+}
+
+main {
+  max-height: 100%;
+  overflow: auto;
+  /* border: 5px solid var(--color-border);
+  border-radius: 1rem; */
+}
+
+.management, .actions, footer {
+  max-height: 10vh;
 }
 
 nav {

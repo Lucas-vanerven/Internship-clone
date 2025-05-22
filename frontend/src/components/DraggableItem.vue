@@ -38,5 +38,9 @@ function onDragEnd(event) {
 <style scoped>
 .list-group-item {
   cursor: grab;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  /* justify-content: center; */
 }
 </style>

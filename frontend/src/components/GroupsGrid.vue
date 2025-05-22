@@ -1,14 +1,17 @@
 <template>
-  <div class="row">
-    <GroupCard
-      v-for="(group, index) in groups"
-      :key="index"
-      :group="group"
-      :groupIndex="index"
-      @dragstart="onDragStart"
-      @drop="onDrop"
-    />
+  
+    <div class="row">
+      <GroupCard
+        v-for="(group, index) in groups"
+        :key="index"
+        :group="group"
+        :groupIndex="index"
+        @dragstart="onDragStart"
+        @drop="onDrop"
+      />
+   
   </div>
+  
 </template>
 
 <script setup>
@@ -47,10 +50,21 @@ function onDrop(targetGroupIndex) {
 </script>
 
 <style scoped>
+
+
 .row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
   gap: 1rem;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

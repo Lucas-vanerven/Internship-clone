@@ -35,9 +35,8 @@ function onDrop() {
 .list-group {
   padding: 0;
   list-style: none;
+  min-height: 100%;
 }
 
-.list-group{
-    height: 100%;
-}
+
 </style>

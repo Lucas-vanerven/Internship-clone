@@ -1,12 +1,10 @@
 @import './base.css';
 
 #app { /* standaard regels opmaak */
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1280px;  /*change this value for a wider or narrower page*/
+  margin: 0 auto;     /*keeps the page centered*/
+  padding-top: 30px;   /*change this value for more or less space on the top*/
   font-weight: normal;
-  /* grid-template-rows: auto 1fr auto; */
-
 }
 
 a,

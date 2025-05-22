@@ -1,6 +1,7 @@
 <template>
   <div class="card">
     <TableHeader :groupIndex="groupIndex" />
+    <!-- <v-divider class="border-opacity-100" inset/> --> 
     <div class="card-body">
       <TableBody :group="group" :groupIndex="groupIndex" @dragstart="onDragStart" @drop="onDrop" />
     </div>
@@ -33,6 +34,11 @@ function onDrop() {
 <style scoped>
 .card {
   margin-bottom: 1rem;
-  min-height: 80vh;;
+  height: 80vh;
+}
+.card-body {
+  padding: 0;
+  overflow-y: auto;
+  height: 100%;
 }
 </style>
