@@ -21,6 +21,8 @@ const props = defineProps({
 const emit = defineEmits(['dragstart', 'dragend']);
 
 function onDragStart() {
+  
+  event.dataTransfer.setDragImage(event.target, 100, 20); //offset the drag image from the cursor
   console.log("Drag started - asdfafß")
   emit('dragstart', props.groupIndex, props.itemIndex);
 }
@@ -41,6 +43,10 @@ function onDragEnd(event) {
   display: flex;
   text-align: center;
   align-items: center;
-  /* justify-content: center; */
+  margin-bottom: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height:25px;
+  
 }
 </style>

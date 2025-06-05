@@ -8,8 +8,7 @@
         :groupIndex="index"
         @dragstart="onDragStart"
         @drop="onDrop"
-      />
-   
+      />   
   </div>
   
 </template>

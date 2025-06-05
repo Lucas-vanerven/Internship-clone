@@ -12,7 +12,8 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+//defineProps is no longer needed as an import
+// import { defineProps, defineEmits } from 'vue';
 import DraggableItem from '../DraggableItem.vue';
 
 const props = defineProps({
