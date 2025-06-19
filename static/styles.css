@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: rgba(60, 57, 80, 1);
+}
+
+body {
+    margin: 0;
+    max-width: 100%;
+    background-color: rgba(244, 247, 254, 1);
+}
+
+h2 {
+    margin-left: 20px;
+    font-weight: 600;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+button {
+    padding-right: 1rem;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    background-color: rgba(60, 57, 80, 1);
+    border-radius: .5rem;
+    -moz-column-gap: .5rem;
+    column-gap: .5rem;
+    align-items: center;
+    display: flex;
+    color: white !important;
+    line-height: 1.5rem;
+    letter-spacing: .16px;
+    cursor: pointer;
+}
+
+ul {
+  margin-top: 0;
+  overflow: overlay;
+}
+
+.actions svg {
+    margin-left: 10px;
+}
+
+.rename {
+    margin-left: 10px;
+}
+
+input[type=text] {
+    border-width: 0 0 4px;
+    margin-bottom: 3%;
+    width: 99%;
+    border-radius: 4px;
+    height: 40px;
+    font-size: medium;
+    border-color: #808080ab;
+}
+
+.status {
+    margin-right: 10px;
+}
+
+.status-tooltip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    margin: 30px 2% 0 2%;
+}
+
+.block {
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: #fff;
+    margin: 10px;
+    box-shadow: 0 0 30px 1px rgba(20, 20, 20, 0.05);
+}
+
+
+#jobs {
+    width: 80%;
+    flex-grow: 2;
+}
+
+
+#jobs .header {
+    display: flex;
+    align-items: center;
+}
+
+#jobs h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.time {
+    margin-top: 5px;
+    color: #808080 !important;
+    font-size: small;
+}
+
+.actions {
+    display: flex;
+    margin: 5px 2% 0 2%;
+    justify-content: flex-end;
+}
+
+.new-job {
+    width: 50%;
+    flex-grow: 1;
+}
+
+#uploadButton span {
+    color: white !important;
+}
+
+
+@media (max-width: 900px) {
+    .content {
+        flex-direction: column;
+        margin-right: 10px;
+    }
+
+    .block, #jobs, .new-job {
+        width: 98%;
+    }
+}

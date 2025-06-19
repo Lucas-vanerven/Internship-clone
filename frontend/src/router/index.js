@@ -7,8 +7,13 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: FactorCalculator,
+      name: 'UploadPage',
+      component: () => import('@/pages/UploadPage.vue'),
+    },
+    {
+      path: '/FactorCalculator',
+      name: 'FactorCalculator',
+      component: () => import('@/pages/FactorCalculator.vue'),
     },
     {
       path: '/download',
@@ -19,6 +24,7 @@ const router = createRouter({
       component: () => import('@/pages/DownloadPage.vue'),
     },
   ],
+  
 })
 
 export default router

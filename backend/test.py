@@ -5,4 +5,5 @@ drive = Drive(r"C:\Users\lucas\Cronbach-WebApp\ArpY\file-request-automation-a62d
 statements_df = drive.spreadsheet("Statements", "Statements-aliases-strategies")
 statements_df = statements_df[statements_df["Client"] == "ALC"]
 
+print(statements_df["Factor"])
 print(statements_df)

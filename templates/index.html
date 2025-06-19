@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cronBach</title>
+    <link rel="stylesheet" href="/cronBach/static/styles.css">
+    <script type="text/javascript" src="/cronBach/static/scripts.js" defer></script>
+    <link rel="icon" type="icon" href="/cronBach/static/img/favicon-white.svg" sizes="32x32" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="icon" href="/cronBach/static/img/favicon-color.svg" sizes="32x32" media="(prefers-color-scheme: light)">
+</head>
+<body>
+    <div class="content">
+        <div class="new-job">
+            <h2>Combine a new database</h2>
+            <div class="block">
+                <form method="post" enctype="multipart/form-data" action="cronBach/api/job/create">
+                    <label for="name">Name:</label><br>
+                    <input type="text" id="name" name="name" placeholder="Enter a name">
+                    <br>
+                    <input type="file" id="file" name="files" accept=".xlsx" multiple="multiple" style="display:none;">
+                    <button type="button" id="uploadButton">
+                        <span>Select files and combine</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="jobs">
+            <h2>All combined databases</h2>
+            <div id="inner-jobs">
+            
+            </div>
+        </div>
+    </div>
+</body>
+</html>

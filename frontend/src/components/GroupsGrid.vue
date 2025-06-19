@@ -17,6 +17,31 @@
 import { ref } from 'vue';
 import GroupCard from './GroupCard.vue';
 
+request = new Request('/api/factorization', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    'id': location.pathname.split('/').pop(),
+  })
+});
+
+data = fetch(request)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Assuming data is an array of groups
+    groups.value = data.groups || [];
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
+
 const groups = ref([
   Array.from({ length: 15 }, (_, i) => i + 1),
   [],
