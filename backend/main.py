@@ -1,3 +1,4 @@
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import polars as pl
@@ -36,7 +37,14 @@ app.add_middleware(
 
 @app.get("/backend")
 def read_root():
-    return {"message": "Hello from FastAPI!"} 
+    return {"message": "Hello from FastAPI!"}
+
+
+@app.get("/calculate_score")
+def read_root():
+    return JSONResponse(content={"message": "Hello from FastAPI!"}) #TODO Write 15 imaginary statements to test the frontend.
+
+#TODO make a dummy endpoint and see if you can get those 15 imaginary statements in the frontend.
 
 
 @app.get("/backend/test")
@@ -48,17 +56,17 @@ def home(request: Request):
     #zodra er een file is geupload, en client name is ingevuld, dan wordt de gebruiker doorgestuurd naar de  prepare task endpoint.
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/api/job/create/{id}")
-def /api/job/create(id: str):
-    #schrap alles behalve de daadwerkelijke statements uit de data file.
-    #Uniek id voor de task, zodat de data file kan worden opgeslagen en later gebruikt.
-    ...
+# @app.get("/api/job/create/{id}")
+# def /api/job/create(id: str):
+#     #schrap alles behalve de daadwerkelijke statements uit de data file.
+#     #Uniek id voor de task, zodat de data file kan worden opgeslagen en later gebruikt.
+#     ...
 
-@app.get("/api/factorization/{id}")
-def factorization(id: str):
-    #haal de aliassen op
-    #laat de frontend API calls maken naar deze endpoints
-    ...
+# @app.get("/api/factorization/{id}")
+# def factorization(id: str):
+#     #haal de aliassen op
+#     #laat de frontend API calls maken naar deze endpoints
+#     ...
 
 @app.post("/api/calculate_score/{id}")
 async def calculate_score(id: str, request: StatementsRequest):

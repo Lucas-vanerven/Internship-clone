@@ -10,6 +10,11 @@ const router = createRouter({
       name: 'UploadPage',
       component: () => import('@/pages/UploadPage.vue'),
     },
+    // {
+    //   path: '/',
+    //   name: 'FactorCalculator',
+    //   component: () => import('@/pages/FactorCalculator.vue'),
+    // },
     {
       path: '/FactorCalculator',
       name: 'FactorCalculator',
@@ -24,7 +29,7 @@ const router = createRouter({
       component: () => import('@/pages/DownloadPage.vue'),
     },
   ],
-  
+
 })
 
 export default router
