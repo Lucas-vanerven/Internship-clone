@@ -17,10 +17,11 @@ import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   group: Array,
-  groupIndex: Number
+  groupIndex: Number,
+  groupScore: Number
 });
 
-const emit = defineEmits(['dragstart', 'drop']);
+const emit = defineEmits(['dragstart', 'drop', 'score-updated']);
 
 function onDragStart(groupIndex, itemIndex) {
   emit('dragstart', groupIndex, itemIndex);

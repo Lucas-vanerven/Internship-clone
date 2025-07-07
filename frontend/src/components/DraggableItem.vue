@@ -11,6 +11,7 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import apiService from '../services/apiService.js';
 
 const props = defineProps({
   item: Number,
@@ -18,21 +19,56 @@ const props = defineProps({
   itemIndex: Number
 });
 
-const emit = defineEmits(['dragstart', 'dragend']);
+const emit = defineEmits(['dragstart', 'dragend', 'cronbach-calculated']);
 
-function onDragStart() {
-  
+async function onDragStart() {
   event.dataTransfer.setDragImage(event.target, 100, 20); //offset the drag image from the cursor
-  console.log("Drag started - asdfafß")
+  console.log("Drag started - triggering Cronbach's Alpha calculation")
+  
+  // Example: Call cronbach_alpha function when drag starts
+  // In a real scenario, you'd want to collect actual data
+  await callCronbachAlpha();
+  
   emit('dragstart', props.groupIndex, props.itemIndex);
 }
 
-
-function onDragEnd(event) {
+async function onDragEnd(event) {
   console.log("Drag ended");
   const target = event.relatedTarget?.closest('ul'); // Use relatedTarget to get the drop target
   console.log("Dropped on target:", target);
+  
+  // Call cronbach_alpha again after item is moved
+  await callCronbachAlpha();
+  
   emit('dragend', props.groupIndex, props.itemIndex, target);
+}
+
+async function callCronbachAlpha() {
+  try {
+    // Generate sample data for demonstration
+    // In a real app, you'd get this from your parent component/store
+    const sampleData = [
+      [5, 4, 3, 5, 4, 3, 2, 4, 5, 3], // Statement 1 responses
+      [4, 5, 4, 4, 3, 4, 3, 5, 4, 4], // Statement 2 responses
+      [3, 4, 5, 3, 4, 3, 4, 4, 3, 5]  // Statement 3 responses
+    ];
+    
+    console.log(`Calling Cronbach's Alpha for item ${props.item} in group ${props.groupIndex + 1}`);
+    
+    // Use the specific cronbach_alpha endpoint (most reliable)
+    const result = await apiService.calculateCronbachAlpha(sampleData, props.groupIndex);
+    console.log('Cronbach Alpha result:', result);
+    
+    // Emit the result to parent components
+    emit('cronbach-calculated', {
+      item: props.item,
+      groupIndex: props.groupIndex,
+      result: result
+    });
+    
+  } catch (error) {
+    console.error('Error calling Cronbach Alpha:', error);
+  }
 }
 
 </script>

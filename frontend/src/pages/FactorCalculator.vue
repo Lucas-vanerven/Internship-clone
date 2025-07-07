@@ -4,12 +4,16 @@ import AnnulerenButton from '../components/AnnulerenButton.vue'
 import OpslaanButton from '../components/OpslaanButton.vue'
 import CreateGroup from '../components/CreateGroup.vue'
 import RemoveGroup from '../components/RemoveGroup.vue'
+import FunctionTester from '../components/FunctionTester.vue'
 </script>
 
 <template>
   
     <main>
       <GroupsGrid />
+      
+      <!-- Function Tester for Development/Testing -->
+      <FunctionTester />
     </main>
     
 

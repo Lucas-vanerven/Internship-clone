@@ -1,4 +1,4 @@
-# functions for calculating the factor's scores
+# function(s) for calculating the factor's scores
 import numpy as np
 import pandas as pd
 

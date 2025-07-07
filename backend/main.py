@@ -2,6 +2,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import polars as pl
+import pandas as pd
 import os
 import uuid
 
@@ -10,15 +11,24 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 from pydantic import BaseModel
 import uvicorn
+# Import calculation functions
+from functions.scoreCalculating import cronbach_alpha
+from functions.statisticalAnalysis import descriptive_statistics, correlation_matrix, item_analysis
 
 # Define request models
 class StatementsRequest(BaseModel):
     statements: list[str]
 
-# Placeholder for Cronbach's alpha calculation
-def cronbach_function(df: pl.DataFrame) -> float:
-    # Implement Cronbach's alpha calculation here
-    return 0.0
+class ScoreCalculationRequest(BaseModel):
+    group_data: list[list[float]]  # 2D array where each inner list represents a statement's scores
+    group_index: int
+
+class GroupsScoreRequest(BaseModel):
+    groups: list[list[list[float]]]  # Array of groups, each containing statement scores
+
+class FunctionCallRequest(BaseModel):
+    function_name: str
+    parameters: dict
 
 project_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,64 +39,157 @@ app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "stat
 # Allow Vue.js frontend to communicate with FastAPI backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:443"],  # Vue dev server
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:443"],  # Vue dev server
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
 )
 
-@app.get("/backend")
+@app.get("/")
 def read_root():
     return {"message": "Hello from FastAPI!"}
 
-
-@app.get("/calculate_score")
-def read_root():
-    return JSONResponse(content={"message": "Hello from FastAPI!"}) #TODO Write 15 imaginary statements to test the frontend.
-
-#TODO make a dummy endpoint and see if you can get those 15 imaginary statements in the frontend.
-
-
-@app.get("/backend/test")
-def read_root():
-    return RedirectResponse(url="http://localhost:5173")
-
-@app.get("/")
-def home(request: Request):
-    #zodra er een file is geupload, en client name is ingevuld, dan wordt de gebruiker doorgestuurd naar de  prepare task endpoint.
-    return templates.TemplateResponse("index.html", {"request": request})
-
-# @app.get("/api/job/create/{id}")
-# def /api/job/create(id: str):
-#     #schrap alles behalve de daadwerkelijke statements uit de data file.
-#     #Uniek id voor de task, zodat de data file kan worden opgeslagen en later gebruikt.
-#     ...
-
-# @app.get("/api/factorization/{id}")
-# def factorization(id: str):
-#     #haal de aliassen op
-#     #laat de frontend API calls maken naar deze endpoints
-#     ...
-
-@app.post("/api/calculate_score/{id}")
-async def calculate_score(id: str, request: StatementsRequest):
-    # Retrieve file from task folder
-    path = f"tasks/{id}/data.xlsx"
-    
-    if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="Task data file not found")
-    
+@app.post("/api/calculate-cronbach-alpha")
+def calculate_cronbach_alpha_endpoint(request: ScoreCalculationRequest):
+    """Calculate Cronbach's alpha for a single group"""
     try:
-        df = pl.read_excel(path)
-        columns = request.statements
-        df = df.select(columns)
-        return {"score": cronbach_function(df)}
+        # Convert the group data to a pandas DataFrame
+        # Each row represents an observation, each column represents a statement
+        df = pd.DataFrame(request.group_data).T  # Transpose to get correct orientation
+        
+        # Calculate Cronbach's alpha
+        alpha_score = cronbach_alpha(df)
+        
+        return {
+            "cronbach_alpha": alpha_score,
+            "group_index": request.group_index,
+            "items_count": len(request.group_data)
+        }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error processing data: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Error calculating Cronbach's alpha: {str(e)}")
 
+@app.post("/api/calculate-all-groups-scores")
+def calculate_all_groups_scores(request: GroupsScoreRequest):
+    """Calculate Cronbach's alpha for multiple groups"""
+    try:
+        results = []
+        for i, group_data in enumerate(request.groups):
+            if len(group_data) > 1:  # Need at least 2 items for Cronbach's alpha
+                df = pd.DataFrame(group_data).T
+                alpha_score = cronbach_alpha(df)
+                results.append({
+                    "group_index": i,
+                    "cronbach_alpha": alpha_score,
+                    "items_count": len(group_data)
+                })
+            else:
+                results.append({
+                    "group_index": i,
+                    "cronbach_alpha": None,
+                    "items_count": len(group_data),
+                    "message": "Not enough items for calculation"
+                })
+        
+        return {"results": results}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error calculating scores: {str(e)}")
+
+# Dynamic function registry for backend/functions
+class FunctionRegistry:
+    def __init__(self):
+        self.functions = {}
+        self._register_functions()
+    
+    def _register_functions(self):
+        """Register all available functions from backend/functions modules"""
+        # Register scoreCalculating functions
+        self.functions['cronbach_alpha'] = {
+            'module': 'functions.scoreCalculating',
+            'function': cronbach_alpha,
+            'description': 'Calculate Cronbach\'s alpha for reliability analysis'
+        }
+        
+        # Register statisticalAnalysis functions
+        self.functions['descriptive_statistics'] = {
+            'module': 'functions.statisticalAnalysis',
+            'function': descriptive_statistics,
+            'description': 'Calculate descriptive statistics (mean, median, std, etc.)'
+        }
+        
+        self.functions['correlation_matrix'] = {
+            'module': 'functions.statisticalAnalysis',
+            'function': correlation_matrix,
+            'description': 'Calculate correlation matrix and related statistics'
+        }
+        
+        self.functions['item_analysis'] = {
+            'module': 'functions.statisticalAnalysis',
+            'function': item_analysis,
+            'description': 'Perform item analysis including item-total correlations'
+        }
+        
+        # Add more functions as they are created
+        # Example: self.functions['new_function'] = {
+        #     'module': 'backend.functions.new_module', 
+        #     'function': function_reference,
+        #     'description': 'Description of what the function does'
+        # }
+    
+    def get_function(self, function_name: str):
+        """Get a function by name"""
+        if function_name in self.functions:
+            return self.functions[function_name]['function']
+        raise ValueError(f"Function '{function_name}' not found")
+    
+    def list_functions(self):
+        """List all available functions"""
+        return {name: details['description'] for name, details in self.functions.items()}
+
+# Initialize function registry
+function_registry = FunctionRegistry()
+
+@app.get("/api/functions")
+def list_available_functions():
+    """List all available functions from backend/functions modules"""
+    return function_registry.list_functions()
+
+@app.post("/api/call-function")
+def call_function(request: FunctionCallRequest):
+    """Generic endpoint to call any function from backend/functions modules"""
+    try:
+        func = function_registry.get_function(request.function_name)
+        
+        # Handle specific function calls with their required parameters
+        if request.function_name == 'cronbach_alpha':
+            # Extract parameters for cronbach_alpha
+            if 'group_data' in request.parameters:
+                df = pd.DataFrame(request.parameters['group_data']).T
+                result = func(df)
+                return {
+                    "function_name": request.function_name,
+                    "result": result,
+                    "parameters": request.parameters
+                }
+        
+        elif request.function_name in ['descriptive_statistics', 'correlation_matrix', 'item_analysis']:
+            # Extract parameters for statistical analysis functions
+            if 'group_data' in request.parameters:
+                df = pd.DataFrame(request.parameters['group_data']).T
+                result = func(df)
+                return {
+                    "function_name": request.function_name,
+                    "result": result,
+                    "parameters": request.parameters
+                }
+        
+        # For other functions, you can add more specific handling here
+        # or implement a more generic parameter passing mechanism
+        
+        raise ValueError(f"Function '{request.function_name}' requires specific parameter handling")
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error calling function '{request.function_name}': {str(e)}")
 
 if __name__ == "__main__":
-    bigapp = FastAPI()
-    bigapp.mount("/cronBach", app)
-
-    uvicorn.run(bigapp, port=8000)
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
