@@ -11,7 +11,7 @@ import FunctionTester from '../components/FunctionTester.vue'
   
     <main>
       <GroupsGrid />
-      
+      <!-- TODO: zorg dat dit de index.html wordt met npm run build -->
       <!-- Function Tester for Development/Testing -->
       <FunctionTester />
     </main>

@@ -121,6 +121,8 @@ class ApiService {
    * @param {object} parameters - Parameters to pass to the function
    * @returns {Promise<object>} - Function result
    */
+
+  /** how to call a function when creating a new one */
   async callFunction(functionName, parameters) {
     return this.makeRequest('/api/call-function', {
       method: 'POST',

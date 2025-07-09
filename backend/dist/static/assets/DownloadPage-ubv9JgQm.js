@@ -1,0 +1,1 @@
+import{_ as n,c as a,e as o,o as t}from"./index-DBlrQVjQ.js";const l={},s={class:"container"};function r(c,e){return t(),a("div",s,e[0]||(e[0]=[o("h1",null,"Download Page",-1),o("p",null,"Download your files here.",-1),o("button",null,"Download",-1)]))}const _=n(l,[["render",r]]);export{_ as default};

@@ -15,4 +15,17 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    outDir: '../frontend/dist', //Output directory to backend folder
+    emptyOutDir: true, // Clear the output directory before building
+    assetsDir: 'assets', //might have to remove the 'static/' part if it causes issues
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  base: '/static/', // Base path for the built assets
 })
+
+

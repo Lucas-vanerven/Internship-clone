@@ -34,7 +34,7 @@ project_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 app = FastAPI()
 templates = Jinja2Templates(directory=os.path.join(project_directory, "templates"))
-app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "static")), name="static")
+# app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "static")), name="static")
 
 # Allow Vue.js frontend to communicate with FastAPI backend
 app.add_middleware(
@@ -45,9 +45,29 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+# API endpoints
 @app.get("/")
 def read_root():
     return {"message": "Hello from FastAPI!"}
+
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+# Mount the compiled Vue app
+# app.mount("/assets", StaticFiles(directory=r"frontend\dist\assets"), name="assets")
+# app.mount("/static", StaticFiles(directory=r"frontend\dist"), name="static")
+# if os.path.exists("frontend/dist/assets"):
+#     app.mount("/assets", StaticFiles(directory=r"frontend\dist\assets"), name="assets")
+app.mount("/static", StaticFiles(directory=r"frontend\dist"), name="static")
+
+
+# Serve the Vue app for all non-API routes
+@app.get("/hallo")
+async def serve_vue_app():
+    # Serve API routes normally
+    
+    # For all other routes, serve the Vue app
+    return FileResponse("frontend/dist/index.html")
 
 @app.post("/api/calculate-cronbach-alpha")
 def calculate_cronbach_alpha_endpoint(request: ScoreCalculationRequest):
