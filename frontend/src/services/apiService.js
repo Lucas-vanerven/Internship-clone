@@ -1,6 +1,9 @@
 // API Service for backend communication
 // This service centralizes all API calls to the backend
 
+// TODO: CHANGE FOR PORTABILITY - Replace hardcoded localhost URL with environment variable
+// Possibly: const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+// Create .env.example with: VITE_API_BASE_URL=http://localhost:8000
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
 class ApiService {
@@ -48,6 +51,7 @@ class ApiService {
    * @returns {Promise<object>} - Cronbach's alpha result
    */
   async calculateCronbachAlpha(groupData, groupIndex) {
+
     return this.makeRequest('/api/calculate-cronbach-alpha', {
       method: 'POST',
       body: JSON.stringify({
@@ -63,9 +67,14 @@ class ApiService {
    * @returns {Promise<object>} - Results for all groups
    */
   async calculateAllGroupsScores(groups) {
+    const taskId = document.location.href
+      .split('/')
+      .pop()
+
     return this.makeRequest('/api/calculate-all-groups-scores', {
       method: 'POST',
       body: JSON.stringify({
+        task_id: taskId,
         groups: groups
       })
     });

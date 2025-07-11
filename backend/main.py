@@ -20,10 +20,12 @@ class StatementsRequest(BaseModel):
     statements: list[str]
 
 class ScoreCalculationRequest(BaseModel):
+    task_id: str  # Unique identifier for the task
     group_data: list[list[float]]  # 2D array where each inner list represents a statement's scores
     group_index: int
 
 class GroupsScoreRequest(BaseModel):
+    task_id: str  # Unique identifier for the task
     groups: list[list[list[float]]]  # Array of groups, each containing statement scores
 
 class FunctionCallRequest(BaseModel):
@@ -39,6 +41,8 @@ templates = Jinja2Templates(directory=os.path.join(project_directory, "templates
 # Allow Vue.js frontend to communicate with FastAPI backend
 app.add_middleware(
     CORSMiddleware,
+    # TODO: CHANGE FOR PORTABILITY - Replace hardcoded localhost URLs with environment variables
+    # Recommended: allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:443"],  # Vue dev server
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
@@ -54,36 +58,39 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 # Mount the compiled Vue app
-# app.mount("/assets", StaticFiles(directory=r"frontend\dist\assets"), name="assets")
-# app.mount("/static", StaticFiles(directory=r"frontend\dist"), name="static")
-# if os.path.exists("frontend/dist/assets"):
-#     app.mount("/assets", StaticFiles(directory=r"frontend\dist\assets"), name="assets")
+# TODO: CHANGE FOR PORTABILITY - Use os.path.join for cross-platform compatibility
+# Recommended: app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "frontend", "dist")), name="static")
 app.mount("/static", StaticFiles(directory=r"frontend\dist"), name="static")
 
 
 # Serve the Vue app for all non-API routes
-@app.get("/hallo")
-async def serve_vue_app():
+@app.get("/creating-factor-groups/{task_id}")
+async def serve_vue_app(task_id: str):
     # Serve API routes normally
     
     # For all other routes, serve the Vue app
+    # TODO: CHANGE FOR PORTABILITY - Use os.path.join for cross-platform file paths
+    # Recommended: return FileResponse(os.path.join(project_directory, "frontend", "dist", "index.html"))
     return FileResponse("frontend/dist/index.html")
 
+
+
 @app.post("/api/calculate-cronbach-alpha")
-def calculate_cronbach_alpha_endpoint(request: ScoreCalculationRequest):
+def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest):
     """Calculate Cronbach's alpha for a single group"""
+    print(data.task_id)
     try:
         # Convert the group data to a pandas DataFrame
         # Each row represents an observation, each column represents a statement
-        df = pd.DataFrame(request.group_data).T  # Transpose to get correct orientation
+        df = pd.DataFrame(data.group_data).T  # Transpose to get correct orientation
         
         # Calculate Cronbach's alpha
         alpha_score = cronbach_alpha(df)
         
         return {
             "cronbach_alpha": alpha_score,
-            "group_index": request.group_index,
-            "items_count": len(request.group_data)
+            "group_index": data.group_index,
+            "items_count": len(data.group_data)
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error calculating Cronbach's alpha: {str(e)}")
@@ -91,6 +98,7 @@ def calculate_cronbach_alpha_endpoint(request: ScoreCalculationRequest):
 @app.post("/api/calculate-all-groups-scores")
 def calculate_all_groups_scores(request: GroupsScoreRequest):
     """Calculate Cronbach's alpha for multiple groups"""
+    print(request.task_id)
     try:
         results = []
         for i, group_data in enumerate(request.groups):
@@ -171,6 +179,7 @@ function_registry = FunctionRegistry()
 @app.get("/api/functions")
 def list_available_functions():
     """List all available functions from backend/functions modules"""
+    print(9)
     return function_registry.list_functions()
 
 @app.post("/api/call-function")
@@ -184,6 +193,7 @@ def call_function(request: FunctionCallRequest):
             # Extract parameters for cronbach_alpha
             if 'group_data' in request.parameters:
                 df = pd.DataFrame(request.parameters['group_data']).T
+                print(func)
                 result = func(df)
                 return {
                     "function_name": request.function_name,
@@ -212,4 +222,9 @@ def call_function(request: FunctionCallRequest):
 
 if __name__ == "__main__":
     import uvicorn
+    # TODO: CHANGE FOR PORTABILITY - Use environment variables for host and port configuration
+    # Recommended: 
+    # HOST = os.getenv("HOST", "127.0.0.1")
+    # PORT = int(os.getenv("PORT", 8000))
+    # uvicorn.run("main:app", host=HOST, port=PORT, reload=True)
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

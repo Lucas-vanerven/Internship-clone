@@ -12,6 +12,8 @@ export default {
     const message = ref("");
 
     onMounted(async () => {
+      // TODO: CHANGE FOR PORTABILITY - Replace hardcoded URL with environment variable
+      // Possibly: const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/`);
       const response = await fetch("http://127.0.0.1:8000/");
       const data = await response.json();
       message.value = data.message;

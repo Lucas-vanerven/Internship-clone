@@ -16,6 +16,8 @@ export default defineConfig({
     },
   },
   build: {
+    // TODO: CHANGE FOR PORTABILITY - This relative path might break in different environments
+    // Consider using process.env.BUILD_OUTPUT_DIR or './dist' for better portability
     outDir: '../frontend/dist', //Output directory to backend folder
     emptyOutDir: true, // Clear the output directory before building
     assetsDir: 'assets', //might have to remove the 'static/' part if it causes issues
@@ -25,6 +27,8 @@ export default defineConfig({
       },
     },
   },
+  // TODO: CHANGE FOR PORTABILITY - Base path should be configurable for different deployment environments
+  // Consider using: base: process.env.VITE_BASE_PATH || '/static/'
   base: '/static/', // Base path for the built assets
 })
 
