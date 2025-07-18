@@ -17,7 +17,8 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from ArpY.rainbow.cst.excel import process_results_file
+# from ArpY.rainbow.cst.excel import process_results_file
+# from ArpY.rainbow.project.data_fetcher import get_client_data, get_statements_data
 
 from functions.scoreCalculating import cronbach_alpha
 
@@ -87,7 +88,7 @@ def delete_old_runs():
 
 
 @app.get("/")
-def read_root(request: Request):
+async def read_root(request: Request):
     """
     Serve the main application page.
     
@@ -97,9 +98,14 @@ def read_root(request: Request):
     Returns:
         Rendered HTML template with client information
     """
+
+    # @Lucas-vanerven: I've added a test in the root directory `test.xlsx`
     delete_old_runs()
+
+    # client_data = await get_client_data()
+    # clients = sorted(client_data["Client"].unique())
     
-    test_clients = [
+    clients = [
         "PPG",
         "SAP"
     ]
@@ -107,7 +113,7 @@ def read_root(request: Request):
         "index.html", 
         {
             "request": request,
-            "clients": test_clients
+            "clients": clients
         }
     )
 
@@ -139,7 +145,7 @@ def create_task(
     with tempfile.NamedTemporaryFile(suffix=".xlsx") as tmp:
         shutil.copyfileobj(files[0].file, tmp)
         tmp.seek(0)
-        df = process_results_file(tmp.name, return_polars=True)
+        df = pl.read_excel(tmp.name)  # process_results_file(tmp.name, return_polars=True)
 
     statements = tuple(s for s in df.columns if s.endswith("*"))
 
@@ -176,21 +182,85 @@ async def serve_vue_app(request: Request):
     return FileResponse("frontend/dist/index.html")
 
 
-@api.get("/get-factor-groups")
-def get_factor_groups(request: Request):
+class DisplayDataResponse(BaseModel):
+    original_statement: str
+    aliasses: str
+    factor_groups: int
+
+
+@api.get("/get-display-data")
+async def get_display_data(request: Request) -> list[DisplayDataResponse]:
     """
     Get the factor groups for a given task and client.
+    This should be called from the VUE frontend to get the data for the display.
+    
+    Args:
+        request: The incoming HTTP request
+        
+    Returns:
+        List of DisplayDataResponse objects
     """
 
     task_id = request.query_params.get("task_id")
     client = request.query_params.get("client")
-    
-    path = os.path.join(project_directory, "runs", f"{task_id}.csv")
-    df = pl.read_csv(path, separator=";")
-    
-    statements_data = get_statements_data(client)
 
+    if task_id is None or client is None:
+        raise HTTPException(status_code=400, detail="Task ID and client are required as query parameters")
+
+    # Test data since the code below cannot be run by Lucas at this point
+    # @Lucas-vanerven: change the data is needed, please test with reduced number of statements
+    response = [
+        DisplayDataResponse(
+            original_statement="Test statement 1",
+            aliasses="Test alias 1",
+            factor_groups=1
+        ),
+        DisplayDataResponse(
+            original_statement="Test statement 2",
+            aliasses="Test alias 2",
+            factor_groups=2
+        ),
+        DisplayDataResponse(
+            original_statement="Test statement 3",
+            aliasses="Test alias 3",
+            factor_groups=1
+        ),
+    ]
+
+    return response
     
+    response = []
+    path = os.path.join(project_directory, "runs", f"{task_id}.csv")
+    columns_in_df = pl.read_csv(path, separator=";").columns
+    
+    statements_data = await get_statements_data(client)
+    
+    # Loop over rows
+    for statement in columns_in_df:
+        row = statements_data.filter(pl.col("Originele statement") == statement)
+
+        # We append the statemnet regardless of whether it is in the database or not
+        if row.is_empty():
+            response.append(DisplayDataResponse(
+                original_statement=statement,
+                aliasses="",
+                factor_groups=-1
+            ))
+            continue
+
+        factor_value = row["Factor"].item()
+        factor_group = int(factor_value[1:]) if factor_value != "" and factor_value is not None else -1
+
+        original_statement = row["Originele statement"].item()
+        alias = row["Aliassen"].item()
+        
+        response.append(DisplayDataResponse(
+            original_statement=original_statement,
+            aliasses=alias,
+            factor_groups=factor_group
+        ))
+
+    return response
 
 
 @api.post("/calculate-cronbach-alpha")
@@ -215,6 +285,25 @@ def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int
         new_scores[group_index] = cronbach_alpha(df.select(statements).to_pandas())
         
     return new_scores
+
+
+class SaveFactorGroupsRequest(BaseModel):
+    """
+    Request model for saving factor groups.
+    
+    """
+    client: str
+    statements: Annotated[list[str], "Original statements"]
+    factor_groups: list[int]
+
+
+@api.post("/save-factor-groups")
+def save_factor_groups(request: SaveFactorGroupsRequest) -> dict[str, str]:
+    """
+    Save the factor groups to the database.
+    """
+    print("Going to save factor groups")
+    return {"message": "Factor groups saved"}
 
 
 # Dynamic function registry for backend/functions
