@@ -1,1 +1,0 @@
-# functions for checking which factor a statement belongs to and placing it in the corresponding one

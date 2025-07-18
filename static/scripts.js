@@ -19,7 +19,7 @@ async function createJob() {
         body: new FormData(form),
     }).then(response => {
         document.getElementById('file').value = '';
-        document.getElementById('name').value = '';
+        document.getElementById('client').value = '';
         if (response.ok) {
             return response.json();
         } else {

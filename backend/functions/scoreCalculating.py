@@ -1,6 +1,7 @@
 # function(s) for calculating the factor's scores
 import numpy as np
 import pandas as pd
+import polars as pl
 
 def cronbach_alpha(df: pd.DataFrame) -> float:
     """Calculate Cronbach's alpha for the passed dataframe containing the statement scores.
@@ -18,3 +19,4 @@ def cronbach_alpha(df: pd.DataFrame) -> float:
     total_var = float(data.sum(axis=1).var(ddof=1))
 
     return np.round(items_count / float(items_count - 1) * (1 - variance_sum / total_var), 3)
+
