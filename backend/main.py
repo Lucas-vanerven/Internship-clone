@@ -55,7 +55,7 @@ class ScoreCalculationRequest(BaseModel):
         groups: Dictionary mapping group indices to lists of statement identifiers
     """
     task_id: str  # Unique identifier for the task
-    groups: dict[Annotated[int, "Group index"], list[Annotated[str, "Statements"]]]
+    groups: list[list[str]]  # every list is a group of statements
 
 
 class FunctionCallRequest(BaseModel):
@@ -281,8 +281,8 @@ def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int
 
     new_scores = {}
 
-    for group_index, statements in data.groups.items():
-        new_scores[group_index] = cronbach_alpha(df.select(statements).to_pandas())
+    for i, statements in enumerate(data.groups):
+        new_scores[i] = cronbach_alpha(df.select(statements).to_pandas())
         
     return new_scores
 
