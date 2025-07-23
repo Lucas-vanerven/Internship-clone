@@ -65,19 +65,6 @@ class ScoreCalculationRequest(BaseModel):
     groups: list[list[str]]  # every list is a group of statements
     #groups being the original statements
 
-
-class FunctionCallRequest(BaseModel):
-    """
-    Request model for generic function calls.
-    
-    Attributes:
-        function_name: Name of the function to call
-        parameters: Dictionary of parameters to pass to the function
-    """
-    function_name: str
-    parameters: dict
-
-
 def delete_old_runs():
     """
     Delete CSV files in the runs directory that are older than 24 hours.
@@ -365,59 +352,6 @@ def save_factor_groups(request: SaveFactorGroupsRequest) -> dict:
         "total_statements": total_statements,
         "groups_count": len(request.groups)
     }
-
-
-# Dynamic function registry for backend/functions
-class FunctionRegistry:
-    def __init__(self):
-        self.functions = {}
-        self._register_functions()
-    
-    def _register_functions(self):
-        """Register all available functions from backend/functions modules"""
-        # Register scoreCalculating functions
-        self.functions['cronbach_alpha'] = {
-            'module': 'functions.scoreCalculating',
-            'function': cronbach_alpha,
-            'description': 'Calculate Cronbach\'s alpha for reliability analysis'
-        }
-    
-    def get_function(self, function_name: str):
-        """Get a function by name"""
-        if function_name in self.functions:
-            return self.functions[function_name]['function']
-        raise ValueError(f"Function '{function_name}' not found")
-    
-    def list_functions(self):
-        """List all available functions"""
-        return {name: details['description'] for name, details in self.functions.items()}
-
-
-function_registry = FunctionRegistry()
-
-@app.post("/api/call-function")
-def call_function(request: FunctionCallRequest):
-    """Generic endpoint to call any function from backend/functions modules"""
-    try:
-        func = function_registry.get_function(request.function_name)
-        
-        # Handle specific function calls with their required parameters
-        if request.function_name == 'cronbach_alpha':
-            # Extract parameters for cronbach_alpha
-            if 'group_data' in request.parameters:
-                df = pd.DataFrame(request.parameters['group_data']).T
-                print(func)
-                result = func(df)
-                return {
-                    "function_name": request.function_name,
-                    "result": result,
-                    "parameters": request.parameters
-                }
-        
-        raise ValueError(f"Function '{request.function_name}' requires specific parameter handling")
-        
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error calling function '{request.function_name}': {str(e)}")
 
 
 app.include_router(api)

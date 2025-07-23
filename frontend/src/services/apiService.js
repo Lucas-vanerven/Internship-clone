@@ -82,45 +82,7 @@ class ApiService {
     return this.makeRequest(`/api/factorization/${id}`, {
       method: 'GET'
     });
-  }
-
-  /**
-   * Health check endpoint
-   * @returns {Promise<object>} - Health status
-   */
-  async healthCheck() {
-    return this.makeRequest('/', {
-      method: 'GET'
-    });
-  }
-
-  /**
-   * List all available functions from backend/functions modules
-   * @returns {Promise<object>} - Available functions
-   */
-  async listAvailableFunctions() {
-    return this.makeRequest('/api/functions', {
-      method: 'GET'
-    });
-  }
-
-  /**
-   * Call any function from backend/functions modules
-   * @param {string} functionName - Name of the function to call
-   * @param {object} parameters - Parameters to pass to the function
-   * @returns {Promise<object>} - Function result
-   */
-
-  /** how to call a function when creating a new one */
-  async callFunction(functionName, parameters) {
-    return this.makeRequest('/api/call-function', {
-      method: 'POST',
-      body: JSON.stringify({
-        function_name: functionName,
-        parameters: parameters
-      })
-    });
-  }
+  }  
 
   /**
    * Get display data from the backend
@@ -152,16 +114,6 @@ class ApiService {
     });
   }
 
-  /**
-   * Convenience method to call cronbach_alpha specifically
-   * @param {Array<Array<number>>} groupData - 2D array of statement scores
-   * @returns {Promise<object>} - Cronbach's alpha result
-   */
-  async callCronbachAlpha(groupData) {
-    return this.callFunction('cronbach_alpha', {
-      group_data: groupData
-    });
-  }
 }
 
 // Create and export a singleton instance
@@ -174,9 +126,6 @@ export const {
   uploadFiles,
   getFactorization,
   healthCheck,
-  listAvailableFunctions,
-  callFunction,
-  callCronbachAlpha,
   getDisplayData,
   saveFactorGroups
 } = apiService;

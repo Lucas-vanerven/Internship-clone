@@ -5,7 +5,6 @@ import AnnulerenButton from '../components/AnnulerenButton.vue'
 import OpslaanButton from '../components/OpslaanButton.vue'
 import CreateGroup from '../components/CreateGroup.vue'
 import RemoveGroup from '../components/RemoveGroup.vue'
-import FunctionTester from '../components/FunctionTester.vue'
 
 // Create a reference to the GroupsGrid component
 const groupsGridRef = ref(null);
@@ -36,8 +35,6 @@ async function handleSaveGroups() {
       <main class="block">
         <h2>Factor Group Calculator</h2>
         <GroupsGrid ref="groupsGridRef" />
-        <!-- Function Tester for Development/Testing -->
-        <FunctionTester />
       </main>
     </div>
     
