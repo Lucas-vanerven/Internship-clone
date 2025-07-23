@@ -45,14 +45,14 @@ class ApiService {
   }
 
   /**
-   * Calculate Cronbach's alpha for a single group
+   * Calculate Cronbach's alpha for a single group (drag-and-drop version)
    * @param {Array<Array<number>>} groupData - 2D array of statement scores
    * @param {number} groupIndex - Index of the group
    * @returns {Promise<object>} - Cronbach's alpha result
    */
   async calculateCronbachAlpha(groupData, groupIndex) {
 
-    return this.makeRequest('/api/calculate-cronbach-alpha', {
+    return this.makeRequest('/api/calculate-cronbach-alpha-dragdrop', {
       method: 'POST',
       body: JSON.stringify({
         group_data: groupData,

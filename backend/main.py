@@ -8,6 +8,7 @@ from typing import Annotated, List
 
 import uvicorn
 import polars as pl
+import pandas as pd
 
 from fastapi.responses import FileResponse
 from fastapi import Body, FastAPI, File, Request, HTTPException, UploadFile, APIRouter, Form
@@ -31,7 +32,7 @@ api = APIRouter(prefix="/api")
 
 
 templates = Jinja2Templates(directory=os.path.join(project_directory, "templates"))
-app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "static")), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "frontend", "dist")), name="static")
 # app.mount("/static", StaticFiles(directory=r"frontend\dist"), name="static")
 
 # Allow Vue.js frontend to communicate with FastAPI backend
@@ -76,6 +77,11 @@ def delete_old_runs():
     This helps maintain storage space by removing temporary data.
     This is done during accessing the main page.(since the loading is instant) 
     """
+    # Create runs directory if it doesn't exist
+    if not os.path.exists(runs_directory):
+        os.makedirs(runs_directory)
+        return  # No files to delete if directory was just created
+    
     hour_24_ago = time.time() - 60 * 60 * 24
     for file in os.listdir(runs_directory):
         if not file.endswith(".csv"):
@@ -179,7 +185,7 @@ async def serve_vue_app(request: Request):
     Returns:
         The Vue.js application HTML file
     """
-    return FileResponse("frontend/dist/index.html")
+    return FileResponse(os.path.join(project_directory, "frontend", "dist", "index.html"))
 
 
 class DisplayDataResponse(BaseModel):
@@ -285,6 +291,42 @@ def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int
         new_scores[i] = cronbach_alpha(df.select(statements).to_pandas())
         
     return new_scores
+
+
+class DragDropCronbachRequest(BaseModel):
+    """
+    Request model for calculating Cronbach's alpha with drag-and-drop data.
+    """
+    group_data: list[list[float]]  # 2D array of statement scores
+    group_index: int
+
+
+@api.post("/calculate-cronbach-alpha-dragdrop")
+def calculate_cronbach_alpha_dragdrop(data: DragDropCronbachRequest) -> dict:
+    """
+    Calculate Cronbach's alpha for drag-and-drop data.
+    
+    Args:
+        data: DragDropCronbachRequest containing group_data (2D array) and group_index
+        
+    Returns:
+        dict: Cronbach's alpha result with value and group_index
+    """
+    import pandas as pd
+    
+    # Convert the 2D array to a DataFrame where each row is a statement's responses
+    # Transpose so each column represents a statement
+    df = pd.DataFrame(data.group_data).T
+    
+    # Calculate Cronbach's alpha
+    alpha_value = cronbach_alpha(df)
+    
+    return {
+        "cronbach_alpha": alpha_value,
+        "group_index": data.group_index,
+        "num_statements": len(data.group_data),
+        "num_responses": len(data.group_data[0]) if data.group_data else 0
+    }
 
 
 class SaveFactorGroupsRequest(BaseModel):

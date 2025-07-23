@@ -28,8 +28,8 @@ export default defineConfig({
     },
   },
   // TODO: CHANGE FOR PORTABILITY - Base path should be configurable for different deployment environments
-  // Consider using: base: process.env.VITE_BASE_PATH || '/static/'
-  base: '/static/', // Base path for the built assets
+  // Consider using: base: process.env.VITE_BASE_PATH || '/cronBach/static/'
+  base: '/cronBach/static/', // Base path for the built assets
 })
 
 
