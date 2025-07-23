@@ -28,10 +28,6 @@ async function onDragStart() {
   event.dataTransfer.setDragImage(event.target, 100, 20); //offset the drag image from the cursor
   console.log("Drag started - triggering Cronbach's Alpha calculation")
   
-  // Example: Call cronbach_alpha function when drag starts
-  // In a real scenario, you'd want to collect actual data
-  await callCronbachAlpha();
-  
   emit('dragstart', props.groupIndex, props.itemIndex);
 }
 
@@ -39,9 +35,7 @@ async function onDragEnd(event) {
   console.log("Drag ended");
   const target = event.relatedTarget?.closest('ul'); // Use relatedTarget to get the drop target
   console.log("Dropped on target:", target);
-  
-  // Call cronbach_alpha again after item is moved
-  await callCronbachAlpha();
+
   
   emit('dragend', props.groupIndex, props.itemIndex, target);
 }

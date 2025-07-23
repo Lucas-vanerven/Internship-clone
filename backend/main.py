@@ -33,7 +33,7 @@ api = APIRouter(prefix="/api")
 
 templates = Jinja2Templates(directory=os.path.join(project_directory, "templates"))
 app.mount("/static", StaticFiles(directory=os.path.join(project_directory, "frontend", "dist")), name="static")
-# app.mount("/static", StaticFiles(directory=r"frontend\dist"), name="static")
+app.mount("/staticFirstPage", StaticFiles(directory=r"staticFirstPage"), name="staticFirstPage")
 
 # Allow Vue.js frontend to communicate with FastAPI backend
 app.add_middleware(
