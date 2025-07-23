@@ -45,28 +45,20 @@ class ApiService {
   }
 
   /**
-   * Calculate Cronbach's alpha for a single group (drag-and-drop version)
-   * @param {Array<Array<number>>} groupData - 2D array of statement scores
-   * @param {number} groupIndex - Index of the group
+   * Calculate Cronbach's alpha for a single group
+   * @param {string} taskId - Task ID
+   * @param {Array<Array<string>>} groups - Array of groups with statement names
    * @returns {Promise<object>} - Cronbach's alpha result
    */
-  async calculateCronbachAlpha(groupData, groupIndex) {
-    //TODO: Change the data structure to match the ScoreCalculationRequest's - use the same method as you did to retrieve the data for the drag-and-drop
-    return this.makeRequest('/api/calculate-cronbach-alpha-dragdrop', {
+  async calculateCronbachAlpha(taskId, groups) {
+    return this.makeRequest('/api/calculate-cronbach-alpha', {
       method: 'POST',
       body: JSON.stringify({
-        group_data: groupData,
-        group_index: groupIndex
+        task_id: taskId,
+        groups: groups
       })
     });
   }
-
-  /**
-   * Calculate Cronbach's alpha for all groups
-   * @param {Array<Array<Array<number>>>} groups - Array of groups with statement scores
-   * @returns {Promise<object>} - Results for all groups
-   */
-  
 
   /**
    * Upload files (existing functionality)
@@ -161,7 +153,6 @@ export default apiService;
 // Named exports for convenience
 export const {
   calculateCronbachAlpha,
-  calculateAllGroupsScores,
   uploadFiles,
   getFactorization,
   healthCheck,

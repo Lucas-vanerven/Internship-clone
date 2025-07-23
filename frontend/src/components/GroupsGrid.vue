@@ -95,14 +95,6 @@ function organizeStatementsIntoGroups(data) {
   console.log('Organized groups:', groups.value);
 }
 
-// Generate mock data for statements (this would come from your actual data)
-const generateMockData = (statements) => {
-  // Generate random scores for each statement (1-5 scale, simulating Likert responses)
-  return statements.map(() => 
-    Array.from({ length: 10 }, () => Math.floor(Math.random() * 5) + 1) // 10 responses per statement
-  );
-};
-
 // Calculate score for a single group
 async function calculateGroupScore(groupIndex) {
   const group = groups.value[groupIndex];
@@ -113,14 +105,26 @@ async function calculateGroupScore(groupIndex) {
   }
 
   try {
-    // Generate mock data for the statements in this group
-    const mockData = generateMockData(group);
+    // Get task_id from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskId = urlParams.get('task_id') || 'test_task';
     
-    const result = await apiService.calculateCronbachAlpha(mockData, groupIndex);
-    groupScores.value[groupIndex] = result.cronbach_alpha;
+    // Extract statement names from the group
+    const statementNames = group.map(item => item.original_statement);
     
-    console.log(`Group ${groupIndex + 1} Cronbach's Alpha: ${result.cronbach_alpha}`);
-    return result;
+    // Create groups array - we need to send all groups but we'll only use the result for this group
+    const allGroupsStatements = groups.value.map(groupItems => 
+      groupItems.map(item => item.original_statement)
+    );
+    
+    const result = await apiService.calculateCronbachAlpha(taskId, allGroupsStatements);
+    
+    // Extract the score for this specific group
+    const groupScore = result[groupIndex];
+    groupScores.value[groupIndex] = groupScore;
+    
+    console.log(`Group ${groupIndex + 1} Cronbach's Alpha: ${groupScore}`);
+    return { cronbach_alpha: groupScore, group_index: groupIndex };
   } catch (error) {
     console.error(`Error calculating score for group ${groupIndex + 1}:`, error);
     groupScores.value[groupIndex] = null;
@@ -131,22 +135,18 @@ async function calculateGroupScore(groupIndex) {
 // Calculate scores for all groups
 async function calculateAllScores() {
   try {
-    const allGroupsData = groups.value.map(group => {
-      if (group.length >= 2) {
-        return generateMockData(group);
+    // Calculate each group individually
+    const resultsArray = [];
+    
+    for (let groupIndex = 0; groupIndex < groups.value.length; groupIndex++) {
+      const result = await calculateGroupScore(groupIndex);
+      if (result !== null) {
+        resultsArray.push(result);
       }
-      return [];
-    });
-
-    const result = await apiService.calculateAllGroupsScores(allGroupsData);
+    }
     
-    // Update group scores
-    result.results.forEach((groupResult) => {
-      groupScores.value[groupResult.group_index] = groupResult.cronbach_alpha;
-    });
-    
-    emit('scores-calculated', result.results);
-    console.log('All group scores calculated:', result.results);
+    emit('scores-calculated', resultsArray);
+    console.log('All group scores calculated:', resultsArray);
   } catch (error) {
     console.error('Error calculating all group scores:', error);
   }

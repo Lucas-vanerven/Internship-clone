@@ -154,15 +154,16 @@ def create_task(
         tmp.seek(0)
         df = pl.read_excel(tmp.name)  # process_results_file(tmp.name, return_polars=True)
 
-    statements = tuple(s for s in df.columns if s.endswith("*"))
-
     while True:
         task_id = str(uuid.uuid4())
         path = os.path.join(runs_directory, f"{task_id}.csv")
         if not os.path.exists(path):
             break
 
-    df.select(statements).cast(pl.UInt8).write_csv(path, separator=";")
+    statements = tuple(s for s in df.columns if s.endswith("*"))
+    statements_mapping = {s: s.removesuffix("*") for s in statements}
+
+    df.select(statements).cast(pl.UInt8).rename(statements_mapping).write_csv(path, separator=";")
 
     base_url = str(request.base_url).rstrip('/')
     path = "/creating-factor-groups"
@@ -218,104 +219,99 @@ async def get_display_data(request: Request) -> list[DisplayDataResponse]:
     # @Lucas-vanerven: change the data is needed, please test with reduced number of statements
     response = [
         DisplayDataResponse(
-            original_statement="The checkout process on the website was easy to navigate.",
+            original_statement="The checkout process on the website was easy to navigate",
             aliasses="",
             factor_groups=1
         ),
         DisplayDataResponse(
-            original_statement="Customer service responded quickly to my inquiry.",
+            original_statement="Customer service responded quickly to my inquiry",
             aliasses="Quick support response",
             factor_groups=2
         ),
         DisplayDataResponse(
-            original_statement="The product met my expectations based on the description.",
+            original_statement="The product met my expectations based on the description",
             aliasses="Product as described",
             factor_groups=3
         ),
         DisplayDataResponse(
-            original_statement="I found it easy to locate what I was looking for on the site.",
+            original_statement="I found it easy to locate what I was looking for on the site",
             aliasses="Easy to find products",
             factor_groups=1
         ),
         DisplayDataResponse(
-            original_statement="The delivery was faster than I expected.",
+            original_statement="The delivery was faster than I expected",
             aliasses="Fast delivery",
             factor_groups=4
         ),
         DisplayDataResponse(
-            original_statement="I felt valued as a customer during the interaction.",
+            original_statement="I felt valued as a customer during the interaction",
             aliasses="Felt valued",
             factor_groups=2
         ),
         DisplayDataResponse(
-            original_statement="The website loaded quickly on my device.",
+            original_statement="The website loaded quickly on my device",
             aliasses="Fast website load",
             factor_groups=1
         ),
         DisplayDataResponse(
-            original_statement="I was able to return the item without any issues.",
+            original_statement="I was able to return the item without any issues",
             aliasses="Easy return process",
             factor_groups=3
         ),
         DisplayDataResponse(
-            original_statement="The pricing felt fair for the quality of the product.",
+            original_statement="The pricing felt fair for the quality of the product",
             aliasses="Fair pricing",
             factor_groups=3
         ),
         DisplayDataResponse(
-            original_statement="I would recommend this company to others.",
+            original_statement="I would recommend this company to others",
             aliasses="Would recommend",
             factor_groups=4
         ),
         DisplayDataResponse(
-            original_statement="I felt the company cared about my satisfaction.",
+            original_statement="I felt the company cared about my satisfaction",
             aliasses="Company cares",
             factor_groups=2
         ),
         DisplayDataResponse(
-            original_statement="There were multiple payment options available at checkout.",
+            original_statement="There were multiple payment options available at checkout",
             aliasses="Multiple payment options",
             factor_groups=1
         ),
         DisplayDataResponse(
-            original_statement="The support staff was polite and helpful.",
+            original_statement="The support staff was polite and helpful",
             aliasses="Polite support",
             factor_groups=2
         ),
         DisplayDataResponse(
-            original_statement="I received regular updates on my order status.",
+            original_statement="I received regular updates on my order status",
             aliasses="Order updates",
             factor_groups=4
         ),
         DisplayDataResponse(
-            original_statement="The product packaging was secure and undamaged.",
+            original_statement="The product packaging was secure and undamaged",
             aliasses="Secure packaging",
             factor_groups=4
         ),
         DisplayDataResponse(
-            original_statement="I could easily access help or support when I needed it.",
+            original_statement="I could easily access help or support when I needed it",
             aliasses="Accessible support",
             factor_groups=2
         ),
         DisplayDataResponse(
-            original_statement="The mobile experience was as good as the desktop version.",
+            original_statement="The mobile experience was as good as the desktop version",
             aliasses="Good mobile experience",
             factor_groups=1
         ),
         DisplayDataResponse(
-            original_statement="The product quality exceeded my expectations.",
+            original_statement="The product quality exceeded my expectations",
             aliasses="Great product quality",
             factor_groups=3
         ),
         DisplayDataResponse(
-            original_statement="I trust this company to handle my personal information securely.",
+            original_statement="I trust this company to handle my personal information securely",
             aliasses="Trust with data",
             factor_groups=4
-        ),
-        DisplayDataResponse(
-            original_statement="The return policy was clearly explained and easy to understand.",
-            aliasses="Clear return policy",
-            factor_groups=3
         ),
     ]
 
