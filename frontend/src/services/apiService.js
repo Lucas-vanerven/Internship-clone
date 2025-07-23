@@ -143,6 +143,18 @@ class ApiService {
   }
 
   /**
+   * Get display data from the backend
+   * @param {string} taskId - Task ID
+   * @param {string} client - Client name
+   * @returns {Promise<Array>} - Array of DisplayDataResponse objects
+   */
+  async getDisplayData(taskId, client) {
+    return this.makeRequest(`/api/get-display-data?task_id=${taskId}&client=${client}`, {
+      method: 'GET'
+    });
+  }
+
+  /**
    * Convenience method to call cronbach_alpha specifically
    * @param {Array<Array<number>>} groupData - 2D array of statement scores
    * @returns {Promise<object>} - Cronbach's alpha result
@@ -167,5 +179,6 @@ export const {
   healthCheck,
   listAvailableFunctions,
   callFunction,
-  callCronbachAlpha
+  callCronbachAlpha,
+  getDisplayData
 } = apiService;

@@ -5,7 +5,7 @@
     @dragstart="onDragStart"
     @dragend="onDragEnd"
   >
-    Stelling {{ item }}
+    {{ item.displayText || `Stelling ${item}` }}
   </li>
 </template>
 
@@ -14,7 +14,7 @@ import { defineProps, defineEmits } from 'vue';
 import apiService from '../services/apiService.js';
 
 const props = defineProps({
-  item: Number,
+  item: [Number, Object], // Allow both Number (legacy) and Object (new statement data)
   groupIndex: Number,
   itemIndex: Number
 });
@@ -53,7 +53,11 @@ async function callCronbachAlpha() {
       [3, 4, 5, 3, 4, 3, 4, 4, 3, 5]  // Statement 3 responses
     ];
     
-    console.log(`Calling Cronbach's Alpha for item ${props.item} in group ${props.groupIndex + 1}`);
+    const itemDescription = typeof props.item === 'object' 
+      ? props.item.displayText 
+      : `item ${props.item}`;
+    
+    console.log(`Calling Cronbach's Alpha for ${itemDescription} in group ${props.groupIndex + 1}`);
     
     // Use the specific cronbach_alpha endpoint (most reliable)
     const result = await apiService.calculateCronbachAlpha(sampleData, props.groupIndex);

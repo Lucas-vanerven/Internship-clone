@@ -16,47 +16,84 @@
 </template>
 
 <script setup>
-import { ref, watch, defineEmits } from 'vue';
+import { ref, watch, defineEmits, onMounted } from 'vue';
 import GroupCard from './GroupCard.vue';
 import apiService from '../services/apiService.js';
 
-// request = new Request('/api/factorization', {
-//   method: 'GET',
-//   headers: {
-//     'Content-Type': 'application/json'
-//   },
-//   body: JSON.stringify({
-//     'id': location.pathname.split('/').pop(),
-//   })
-// });
-
-// data = fetch(request)
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     return response.json();
-//   })
-//   .then(data => {
-//     // Assuming data is an array of groups
-//     groups.value = data.groups || [];
-//   })
-//   .catch(error => {
-//     console.error('There was a problem with the fetch operation:', error);
-//   });
-
 const groups = ref([
-  Array.from({ length: 15 }, (_, i) => i + 1),
+  [],
   [],
   [],
   []
 ]);
 
+const displayData = ref([]);
 const groupScores = ref([null, null, null, null]);
 const draggedItem = ref(null);
 
 // Emit events to parent components
 const emit = defineEmits(['groups-updated', 'scores-calculated']);
+
+// Fetch display data from the backend
+async function fetchDisplayData() {
+  try {
+    // Get task_id and client from URL query parameters or use defaults for testing
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskId = urlParams.get('task_id') || 'test_task';
+    const client = urlParams.get('client') || 'test_client';
+    
+    console.log(`Fetching display data for task_id: ${taskId}, client: ${client}`);
+    
+    const data = await apiService.getDisplayData(taskId, client);
+    displayData.value = data;
+    
+    // Organize statements into groups based on factor_groups
+    organizeStatementsIntoGroups(data);
+    
+    console.log('Display data fetched:', data);
+  } catch (error) {
+    console.error('Error fetching display data:', error);
+    // Fallback to test data if API fails
+    displayData.value = [
+      { original_statement: "Test statement 1", aliasses: "Test alias 1", factor_groups: 1 },
+      { original_statement: "Test statement 2", aliasses: "Test alias 2", factor_groups: 2 }
+    ];
+    organizeStatementsIntoGroups(displayData.value);
+  }
+}
+
+// Organize statements into groups based on factor_groups
+function organizeStatementsIntoGroups(data) {
+  // Reset all groups
+  groups.value = [[], [], [], []];
+  
+  data.forEach((statement, index) => {
+    const groupIndex = statement.factor_groups - 1; // Convert to 0-based index
+    
+    // Ensure we have a valid group index (0-3)
+    if (groupIndex >= 0 && groupIndex < 4) {
+      groups.value[groupIndex].push({
+        id: index,
+        original_statement: statement.original_statement,
+        aliasses: statement.aliasses,
+        factor_groups: statement.factor_groups,
+        displayText: statement.aliasses || statement.original_statement
+      });
+    } else {
+      // If factor_groups is out of range, put it in the first group
+      groups.value[0].push({
+        id: index,
+        original_statement: statement.original_statement,
+        aliasses: statement.aliasses,
+        factor_groups: statement.factor_groups,
+        displayText: statement.aliasses || statement.original_statement
+      });
+      console.warn(`Statement with factor_groups ${statement.factor_groups} placed in group 1`);
+    }
+  });
+  
+  console.log('Organized groups:', groups.value);
+}
 
 // Generate mock data for statements (this would come from your actual data)
 const generateMockData = (statements) => {
@@ -153,8 +190,12 @@ watch(groups, () => {
   emit('groups-updated', groups.value);
 }, { deep: true });
 
-// Calculate initial scores
-calculateAllScores();
+// Initialize component
+onMounted(async () => {
+  await fetchDisplayData();
+  // Calculate initial scores after data is loaded
+  calculateAllScores();
+});
 </script>
 
 <style scoped>
