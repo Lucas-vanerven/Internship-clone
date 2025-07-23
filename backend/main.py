@@ -319,19 +319,52 @@ class SaveFactorGroupsRequest(BaseModel):
     """
     Request model for saving factor groups.
     
+    Attributes:
+        task_id: Unique identifier for the task
+        client: Client identifier
+        groups: List of four groups, each containing statements with their information
     """
+    task_id: str
     client: str
-    statements: Annotated[list[str], "Original statements"]
-    factor_groups: list[int]
+    groups: list[list[dict]]  # Four groups, each containing statement objects
 
 
 @api.post("/save-factor-groups")
-def save_factor_groups(request: SaveFactorGroupsRequest) -> dict[str, str]:
+def save_factor_groups(request: SaveFactorGroupsRequest) -> dict:
     """
     Save the factor groups to the database.
+    
+    Args:
+        request: SaveFactorGroupsRequest containing task_id, client, and four groups
+        
+    Returns:
+        dict: Success message with details about what was saved
     """
-    print("Going to save factor groups")
-    return {"message": "Factor groups saved"}
+    print(f"Saving factor groups for task_id: {request.task_id}, client: {request.client}")
+    print(f"Number of groups: {len(request.groups)}")
+    
+    # Log the structure of what we're receiving
+    for i, group in enumerate(request.groups):
+        print(f"Group {i+1} has {len(group)} statements:")
+        for statement in group:
+            original = statement.get('original_statement', 'N/A')
+            print(f"  - {original}")
+    
+    # TODO: Implement actual database saving logic here
+    # This is where you would save to your database:
+    # - Update the factor groups for each statement
+    # - Associate statements with the correct group numbers
+    # - Store the task_id and client information
+    
+    total_statements = sum(len(group) for group in request.groups)
+    
+    return {
+        "message": "Factor groups saved successfully",
+        "task_id": request.task_id,
+        "client": request.client,
+        "total_statements": total_statements,
+        "groups_count": len(request.groups)
+    }
 
 
 # Dynamic function registry for backend/functions

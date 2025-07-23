@@ -32,7 +32,33 @@ const groupScores = ref([null, null, null, null]);
 const draggedItem = ref(null);
 
 // Emit events to parent components
-const emit = defineEmits(['groups-updated', 'scores-calculated']);
+const emit = defineEmits(['groups-updated', 'scores-calculated', 'save-ready']);
+
+// Expose the groups data, task_id, and client to parent components
+defineExpose({
+  groups,
+  getTaskId: () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('task_id') || 'test_task';
+  },
+  getClient: () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('client') || 'test_client';
+  },
+  saveGroups: async () => {
+    const taskId = new URLSearchParams(window.location.search).get('task_id') || 'test_task';
+    const client = new URLSearchParams(window.location.search).get('client') || 'test_client';
+    
+    try {
+      const result = await apiService.saveFactorGroups(taskId, client, groups.value);
+      console.log('Groups saved successfully:', result);
+      return result;
+    } catch (error) {
+      console.error('Error saving groups:', error);
+      throw error;
+    }
+  }
+});
 
 // Fetch display data from the backend
 async function fetchDisplayData() {

@@ -1,13 +1,32 @@
 <template>
-  <button class="btn btn-primary">Opslaan</button>
+  <button class="btn btn-primary" @click="handleClick" :disabled="loading">
+    {{ loading ? 'Opslaan...' : 'Opslaan' }}
+  </button>
 </template>
 
-<script>
-export default {
-  name: 'OpslaanButton'
-};
+<script setup>
+import { ref, defineEmits } from 'vue';
+
+const emit = defineEmits(['click']);
+const loading = ref(false);
+
+async function handleClick() {
+  loading.value = true;
+  try {
+    emit('click');
+  } finally {
+    // Reset loading state after a short delay to show feedback
+    setTimeout(() => {
+      loading.value = false;
+    }, 1000);
+  }
+}
 </script>
 
 <style scoped>
 /* Add any specific styles for the Opslaan button here */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 </style>

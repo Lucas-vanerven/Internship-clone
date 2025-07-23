@@ -1,16 +1,39 @@
 <script setup>
+import { ref } from 'vue';
 import GroupsGrid from '../components/GroupsGrid.vue'
 import AnnulerenButton from '../components/AnnulerenButton.vue'
 import OpslaanButton from '../components/OpslaanButton.vue'
 import CreateGroup from '../components/CreateGroup.vue'
 import RemoveGroup from '../components/RemoveGroup.vue'
 import FunctionTester from '../components/FunctionTester.vue'
+
+// Create a reference to the GroupsGrid component
+const groupsGridRef = ref(null);
+
+// Function to handle saving factor groups
+async function handleSaveGroups() {
+  if (groupsGridRef.value) {
+    try {
+      const result = await groupsGridRef.value.saveGroups();
+      console.log('Factor groups saved successfully!', result);
+      alert('Factor groups saved successfully!');
+      return result;
+    } catch (error) {
+      console.error('Error saving factor groups:', error);
+      alert('Error saving factor groups: ' + error.message);
+      throw error;
+    }
+  } else {
+    console.error('GroupsGrid reference not available');
+    alert('Error: Cannot access groups data');
+  }
+}
 </script>
 
 <template>
   
     <main>
-      <GroupsGrid />
+      <GroupsGrid ref="groupsGridRef" />
       <!-- TODO: zorg dat dit de index.html wordt met npm run build -->
       <!-- Function Tester for Development/Testing -->
       <FunctionTester />
@@ -28,7 +51,7 @@ import FunctionTester from '../components/FunctionTester.vue'
 
     <div class="actions">
       <AnnulerenButton />
-      <OpslaanButton />
+      <OpslaanButton @click="handleSaveGroups" />
     </div>
  
 </template>

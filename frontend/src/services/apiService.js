@@ -135,6 +135,24 @@ class ApiService {
   }
 
   /**
+   * Save factor groups to the backend
+   * @param {string} taskId - Task ID
+   * @param {string} client - Client name
+   * @param {Array<Array<object>>} groups - Four groups containing statement objects
+   * @returns {Promise<object>} - Save result
+   */
+  async saveFactorGroups(taskId, client, groups) {
+    return this.makeRequest('/api/save-factor-groups', {
+      method: 'POST',
+      body: JSON.stringify({
+        task_id: taskId,
+        client: client,
+        groups: groups
+      })
+    });
+  }
+
+  /**
    * Convenience method to call cronbach_alpha specifically
    * @param {Array<Array<number>>} groupData - 2D array of statement scores
    * @returns {Promise<object>} - Cronbach's alpha result
@@ -159,5 +177,6 @@ export const {
   listAvailableFunctions,
   callFunction,
   callCronbachAlpha,
-  getDisplayData
+  getDisplayData,
+  saveFactorGroups
 } = apiService;
