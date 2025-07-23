@@ -57,6 +57,7 @@ class ScoreCalculationRequest(BaseModel):
     """
     task_id: str  # Unique identifier for the task
     groups: list[list[str]]  # every list is a group of statements
+    #groups being the original statements
 
 
 class FunctionCallRequest(BaseModel):

@@ -51,7 +51,7 @@ class ApiService {
    * @returns {Promise<object>} - Cronbach's alpha result
    */
   async calculateCronbachAlpha(groupData, groupIndex) {
-
+    //TODO: Change the data structure to match the ScoreCalculationRequest's - use the same method as you did to retrieve the data for the drag-and-drop
     return this.makeRequest('/api/calculate-cronbach-alpha-dragdrop', {
       method: 'POST',
       body: JSON.stringify({
