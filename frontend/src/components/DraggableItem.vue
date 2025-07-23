@@ -40,37 +40,7 @@ async function onDragEnd(event) {
   emit('dragend', props.groupIndex, props.itemIndex, target);
 }
 
-async function callCronbachAlpha() {
-  try {
-    // Generate sample data for demonstration
-    // In a real app, you'd get this from your parent component/store
-    const sampleData = [
-      [5, 4, 3, 5, 4, 3, 2, 4, 5, 3], // Statement 1 responses
-      [4, 5, 4, 4, 3, 4, 3, 5, 4, 4], // Statement 2 responses
-      [3, 4, 5, 3, 4, 3, 4, 4, 3, 5]  // Statement 3 responses
-    ];
-    
-    const itemDescription = typeof props.item === 'object' 
-      ? props.item.displayText 
-      : `item ${props.item}`;
-    
-    console.log(`Calling Cronbach's Alpha for ${itemDescription} in group ${props.groupIndex + 1}`);
-    
-    // Use the specific cronbach_alpha endpoint (most reliable)
-    const result = await apiService.calculateCronbachAlpha(sampleData, props.groupIndex);
-    console.log('Cronbach Alpha result:', result);
-    
-    // Emit the result to parent components
-    emit('cronbach-calculated', {
-      item: props.item,
-      groupIndex: props.groupIndex,
-      result: result
-    });
-    
-  } catch (error) {
-    console.error('Error calling Cronbach Alpha:', error);
-  }
-}
+
 
 </script>
 
