@@ -1,6 +1,6 @@
 <template>
-  <button class="btn btn-primary" @click="handleClick" :disabled="loading">
-    {{ loading ? 'Opslaan...' : 'Opslaan' }}
+  <button @click="handleClick" :disabled="loading">
+    <span>{{ loading ? 'Opslaan...' : 'Opslaan' }}</span>
   </button>
 </template>
 
