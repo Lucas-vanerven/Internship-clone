@@ -4,8 +4,11 @@
     draggable="true"
     @dragstart="onDragStart"
     @dragend="onDragEnd"
+    :title="item.displayText || `Stelling ${item}`"
   >
-    {{ item.displayText || `Stelling ${item}` }}
+    <span class="item-text">
+      {{ item.displayText || `Stelling ${item}` }}
+    </span>
   </li>
 </template>
 
@@ -86,7 +89,21 @@ async function callCronbachAlpha() {
   margin-bottom: 4px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  height:25px;
-  
+  height: 25px;
+  position: relative;
+  padding: 0 8px;
+  overflow: hidden;
+}
+
+.item-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+}
+
+.list-group-item:active {
+  cursor: grabbing;
 }
 </style>
