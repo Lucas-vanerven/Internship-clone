@@ -5,7 +5,7 @@
     <div class="card-body">
       <TableBody :group="group" :groupIndex="groupIndex" @dragstart="onDragStart" @drop="onDrop" />
     </div>
-    <TableFooter />
+    <TableFooter :groupScore="groupScore" />
   </div>
 </template>
 

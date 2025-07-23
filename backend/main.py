@@ -3,6 +3,7 @@ import uuid
 import tempfile
 import shutil
 import time
+import sys
 
 from typing import Annotated, List
 
@@ -15,17 +16,22 @@ from fastapi import Body, FastAPI, File, Request, HTTPException, UploadFile, API
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+project_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+runs_directory = os.path.join(project_directory, "runs")
+
+load_dotenv(os.path.join(project_directory, ".env"))
+sys.path.append(project_directory)
 
 # from ArpY.rainbow.cst.excel import process_results_file
 # from ArpY.rainbow.project.data_fetcher import get_client_data, get_statements_data
 
+from ArpY.rainbow.project.data_fetcher import get_statements_data
+
 from functions.scoreCalculating import cronbach_alpha
-
-
-project_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-runs_directory = os.path.join(project_directory, "runs")
 
 app = FastAPI(root_path="/cronBach")
 api = APIRouter(prefix="/api")
@@ -214,108 +220,6 @@ async def get_display_data(request: Request) -> list[DisplayDataResponse]:
 
     if task_id is None or client is None:
         raise HTTPException(status_code=400, detail="Task ID and client are required as query parameters")
-
-    # Test data since the code below cannot be run by Lucas at this point
-    # @Lucas-vanerven: change the data is needed, please test with reduced number of statements
-    response = [
-        DisplayDataResponse(
-            original_statement="The checkout process on the website was easy to navigate",
-            aliasses="",
-            factor_groups=1
-        ),
-        DisplayDataResponse(
-            original_statement="Customer service responded quickly to my inquiry",
-            aliasses="Quick support response",
-            factor_groups=2
-        ),
-        DisplayDataResponse(
-            original_statement="The product met my expectations based on the description",
-            aliasses="Product as described",
-            factor_groups=3
-        ),
-        DisplayDataResponse(
-            original_statement="I found it easy to locate what I was looking for on the site",
-            aliasses="Easy to find products",
-            factor_groups=1
-        ),
-        DisplayDataResponse(
-            original_statement="The delivery was faster than I expected",
-            aliasses="Fast delivery",
-            factor_groups=4
-        ),
-        DisplayDataResponse(
-            original_statement="I felt valued as a customer during the interaction",
-            aliasses="Felt valued",
-            factor_groups=2
-        ),
-        DisplayDataResponse(
-            original_statement="The website loaded quickly on my device",
-            aliasses="Fast website load",
-            factor_groups=1
-        ),
-        DisplayDataResponse(
-            original_statement="I was able to return the item without any issues",
-            aliasses="Easy return process",
-            factor_groups=3
-        ),
-        DisplayDataResponse(
-            original_statement="The pricing felt fair for the quality of the product",
-            aliasses="Fair pricing",
-            factor_groups=3
-        ),
-        DisplayDataResponse(
-            original_statement="I would recommend this company to others",
-            aliasses="Would recommend",
-            factor_groups=4
-        ),
-        DisplayDataResponse(
-            original_statement="I felt the company cared about my satisfaction",
-            aliasses="Company cares",
-            factor_groups=2
-        ),
-        DisplayDataResponse(
-            original_statement="There were multiple payment options available at checkout",
-            aliasses="Multiple payment options",
-            factor_groups=1
-        ),
-        DisplayDataResponse(
-            original_statement="The support staff was polite and helpful",
-            aliasses="Polite support",
-            factor_groups=2
-        ),
-        DisplayDataResponse(
-            original_statement="I received regular updates on my order status",
-            aliasses="Order updates",
-            factor_groups=4
-        ),
-        DisplayDataResponse(
-            original_statement="The product packaging was secure and undamaged",
-            aliasses="Secure packaging",
-            factor_groups=4
-        ),
-        DisplayDataResponse(
-            original_statement="I could easily access help or support when I needed it",
-            aliasses="Accessible support",
-            factor_groups=2
-        ),
-        DisplayDataResponse(
-            original_statement="The mobile experience was as good as the desktop version",
-            aliasses="Good mobile experience",
-            factor_groups=1
-        ),
-        DisplayDataResponse(
-            original_statement="The product quality exceeded my expectations",
-            aliasses="Great product quality",
-            factor_groups=3
-        ),
-        DisplayDataResponse(
-            original_statement="I trust this company to handle my personal information securely",
-            aliasses="Trust with data",
-            factor_groups=4
-        ),
-    ]
-
-    return response
     
     response = []
     path = os.path.join(project_directory, "runs", f"{task_id}.csv")
