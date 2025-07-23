@@ -66,19 +66,7 @@ class ApiService {
    * @param {Array<Array<Array<number>>>} groups - Array of groups with statement scores
    * @returns {Promise<object>} - Results for all groups
    */
-  async calculateAllGroupsScores(groups) {
-    const taskId = document.location.href
-      .split('/')
-      .pop()
-
-    return this.makeRequest('/api/calculate-all-groups-scores', {
-      method: 'POST',
-      body: JSON.stringify({
-        task_id: taskId,
-        groups: groups
-      })
-    });
-  }
+  
 
   /**
    * Upload files (existing functionality)
