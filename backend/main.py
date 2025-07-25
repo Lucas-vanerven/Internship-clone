@@ -336,13 +336,7 @@ def save_factor_groups(request: SaveFactorGroupsRequest) -> dict:
         for statement in group:
             original = statement.get('original_statement', 'N/A')
             print(f"  - {original}")
-    
-    # TODO: Implement actual database saving logic here
-    # This is where you would save to your database:
-    # - Update the factor groups for each statement
-    # - Associate statements with the correct group numbers
-    # - Store the task_id and client information
-    
+
     total_statements = sum(len(group) for group in request.groups)
     
     return {
