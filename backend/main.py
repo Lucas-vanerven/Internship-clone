@@ -243,7 +243,7 @@ async def get_display_data(request: Request) -> list[DisplayDataResponse]:
 
 
 @api.post("/calculate-cronbach-alpha")
-def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int, float]:
+def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int, float | None]:
     """
     Calculate Cronbach's alpha for all groups.
     This is done in one go to avoid multiple reads.
@@ -253,7 +253,8 @@ def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int
             groups are the names of the statements
         
     Returns:
-        dict[int, float]: A dictionary with group indices as keys and Cronbach's alpha values as values
+        dict[int, float | None]: A dictionary with group indices as keys and Cronbach's alpha values as values
+                         Groups with less than 2 statements will have null values
     """
     path = os.path.join(project_directory, "runs", f"{data.task_id}.csv")
     df = pl.read_csv(path, separator=";")
@@ -261,7 +262,16 @@ def calculate_cronbach_alpha_endpoint(data: ScoreCalculationRequest) -> dict[int
     new_scores = {}
 
     for i, statements in enumerate(data.groups):
-        new_scores[i] = cronbach_alpha(df.select(statements).to_pandas())
+        # Check if group has less than 2 statements (source group limitation)
+        if len(statements) < 2:
+            new_scores[i] = None  # Return None for groups with insufficient statements
+        else:
+            try:
+                new_scores[i] = cronbach_alpha(df.select(statements).to_pandas())
+            except ValueError as e:
+                # Handle cases where calculation fails due to insufficient data
+                print(f"Warning: Could not calculate Cronbach's alpha for group {i}: {e}")
+                new_scores[i] = None
         
     return new_scores
 

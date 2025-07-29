@@ -145,12 +145,12 @@ async function calculateGroupScore(groupIndex) {
     
     const result = await apiService.calculateCronbachAlpha(taskId, allGroupsStatements);
     
-    // Extract the score for this specific group
+    // Extract the score for this specific group - handle null values from backend
     const groupScore = result[groupIndex];
-    groupScores.value[groupIndex] = groupScore;
+    groupScores.value[groupIndex] = groupScore; // This could be null if group has < 2 statements
     
     console.log(`Group ${groupIndex + 1} Cronbach's Alpha: ${groupScore}`);
-    return { cronbach_alpha: groupScore, group_index: groupIndex };
+    return groupScore !== null ? { cronbach_alpha: groupScore, group_index: groupIndex } : null;
   } catch (error) {
     console.error(`Error calculating score for group ${groupIndex + 1}:`, error);
     groupScores.value[groupIndex] = null;
@@ -161,13 +161,26 @@ async function calculateGroupScore(groupIndex) {
 // Calculate scores for all groups
 async function calculateAllScores() {
   try {
-    // Calculate each group individually
-    const resultsArray = [];
+    // Get task_id from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskId = urlParams.get('task_id') || 'test_task';
     
+    // Create groups array with statement names
+    const allGroupsStatements = groups.value.map(groupItems => 
+      groupItems.map(item => item.original_statement)
+    );
+    
+    // Make a single API call for all groups
+    const result = await apiService.calculateCronbachAlpha(taskId, allGroupsStatements);
+    
+    // Update all group scores and collect valid results
+    const resultsArray = [];
     for (let groupIndex = 0; groupIndex < groups.value.length; groupIndex++) {
-      const result = await calculateGroupScore(groupIndex);
-      if (result !== null) {
-        resultsArray.push(result);
+      const groupScore = result[groupIndex];
+      groupScores.value[groupIndex] = groupScore; // This could be null for groups with < 2 statements
+      
+      if (groupScore !== null) {
+        resultsArray.push({ cronbach_alpha: groupScore, group_index: groupIndex });
       }
     }
     
