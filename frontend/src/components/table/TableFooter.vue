@@ -1,6 +1,6 @@
 <template>
   <div class="table-footer text-center">
-    Score: {{ displayScore }}
+    Score: <span :style="{ color: scoreColor }">{{ displayScore }}</span>
   </div>
 </template>
 
@@ -19,6 +19,20 @@ const displayScore = computed(() => {
     return 'N/A';
   }
   return props.groupScore.toFixed(3);
+});
+
+const scoreColor = computed(() => {
+  if (props.groupScore === null || props.groupScore === undefined) {
+    return 'inherit'; // Default color for N/A
+  }
+  
+  if (props.groupScore < 0.7) {
+    return '#ff0000'; // Red for scores below 0.7
+  } else if (props.groupScore < 0.9) {
+    return '#ffb600'; // Orange for scores below 0.9
+  } else {
+    return '#009902'; // Green for scores 0.9 or higher
+  }
 });
 </script>
 
