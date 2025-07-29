@@ -1,6 +1,7 @@
 <template>
-  <button @click="handleClick" :disabled="loading">
-    <span>{{ loading ? 'Opslaan...' : 'Opslaan' }}</span>
+  <button class="btn btn-primary" @click="handleClick" :disabled="loading">
+    <!-- <span>{{ loading ? 'Opslaan...' : 'Opslaan' }}</span> -->
+    <span style="color: white;">{{ loading ? 'Opslaan...' : 'Opslaan' }}</span>
   </button>
 </template>
 
@@ -28,5 +29,6 @@ async function handleClick() {
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  text-align: center;
 }
 </style>
