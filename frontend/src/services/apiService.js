@@ -1,9 +1,39 @@
+/**
+ * API Service for Backend Communication
+ * 
+ * This service centralizes all HTTP communication between the Vue.js frontend
+ * and the FastAPI backend server. It provides a clean, consistent interface
+ * for all API operations related to Cronbach's alpha calculations and 
+ * factor analysis.
+ * 
+ * Key Features:
+ * - Centralized error handling with detailed logging
+ * - Consistent request/response formatting
+ * - Type-safe method signatures with JSDoc
+ * - Singleton pattern for application-wide usage
+ * 
+ * Available Operations:
+ * - Calculate Cronbach's alpha reliability for factor groups
+ * - Upload and process data files
+ * - Retrieve display data for factor analysis
+ * - Save factor group configurations
+ * - Get factorization results (future implementation)
+ * 
+ * Configuration:
+ * - Base URL currently hardcoded (TODO: make configurable via environment variables)
+ * - JSON content type default with FormData support for uploads
+ * - Automatic response parsing and error extraction
+ * 
+ * Usage:
+ * - Import as default: `import apiService from '@/services/apiService.js'`
+ * - Use methods: `await apiService.calculateCronbachAlpha(taskId, groups)`
+ * - Named exports available for convenience
+ */
+
 // API Service for backend communication
 // This service centralizes all API calls to the backend
 
-// TODO: CHANGE FOR PORTABILITY - Replace hardcoded localhost URL with environment variable
-// Possibly: const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-// Create .env.example with: VITE_API_BASE_URL=http://localhost:8000
+
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
 class ApiService {

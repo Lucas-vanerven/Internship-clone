@@ -1,8 +1,15 @@
 {
+  // JavaScript Configuration for Vue.js Project
+  // This file configures the JavaScript language service in VS Code
+  // and other editors for better IntelliSense and path resolution
+  
   "compilerOptions": {
     "paths": {
+      // Allow '@' as an alias for the src directory in imports
+      // Example: import Component from '@/components/Component.vue'
       "@/*": ["./src/*"]
     }
   },
+  // Exclude directories from JavaScript language service processing
   "exclude": ["node_modules", "dist"]
 }

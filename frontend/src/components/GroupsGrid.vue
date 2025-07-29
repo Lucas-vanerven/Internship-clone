@@ -1,5 +1,21 @@
-<template>
+<!--
+  Groups Grid Component
   
+  This component manages the main interface for factor analysis. It provides:
+  - Four factor groups where statements can be organized
+  - Drag and drop functionality for moving statements between groups
+  - Real-time Cronbach's alpha calculation for each group
+  - Data persistence to the backend
+  
+  Key features:
+  - Loads statement data from backend based on URL parameters (task_id, client)
+  - Calculates reliability scores when groups are modified
+  - Provides save functionality for factor groupings
+  - Manages drag and drop state across group cards
+-->
+
+<template>
+  <!-- Grid container for the four factor groups -->
     <div class="row">
       <GroupCard
         v-for="(group, index) in groups"
@@ -20,31 +36,38 @@ import { ref, watch, defineEmits, onMounted } from 'vue';
 import GroupCard from './GroupCard.vue';
 import apiService from '../services/apiService.js';
 
+// Reactive data for managing four factor groups
 const groups = ref([
-  [],
-  [],
-  [],
-  []
+  [], // Group 1: Statements for first factor
+  [], // Group 2: Statements for second factor
+  [], // Group 3: Statements for third factor
+  []  // Group 4: Statements for fourth factor
 ]);
 
+// Data loaded from backend for statement management
 const displayData = ref([]);
+// Cronbach's alpha scores for each group
 const groupScores = ref([null, null, null, null]);
+// Current item being dragged for drag-and-drop functionality
 const draggedItem = ref(null);
 
-// Emit events to parent components
+// Emit events to parent components for coordination
 const emit = defineEmits(['groups-updated', 'scores-calculated', 'save-ready']);
 
-// Expose the groups data, task_id, and client to parent components
+// Expose methods and data to parent components via template refs
 defineExpose({
   groups,
+  // Extract task ID from URL parameters for backend communication
   getTaskId: () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('task_id') || 'test_task';
   },
+  // Extract client identifier from URL parameters
   getClient: () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('client') || 'test_client';
   },
+  // Save current factor groups to backend
   saveGroups: async () => {
     const taskId = new URLSearchParams(window.location.search).get('task_id') || 'test_task';
     const client = new URLSearchParams(window.location.search).get('client') || 'test_client';
