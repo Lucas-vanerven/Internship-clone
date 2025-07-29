@@ -62,7 +62,7 @@ async function handleSaveGroups() {
 .content {
   display: flex;
   flex-direction: column;
-  margin: 30px 2% 0 2%;
+  margin: 10px 2% 0 2%;
   flex: 1;
 }
 
@@ -76,8 +76,8 @@ main {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 20px;
-  padding: 20px 0;
+  margin-top: 10px;
+  padding: 10px 0;
 }
 
 /* Logo positioning - centered across full page width */

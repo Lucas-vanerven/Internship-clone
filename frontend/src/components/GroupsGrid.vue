@@ -230,8 +230,8 @@ onMounted(async () => {
 .row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
-  gap: 1rem;
+  grid-gap: 0.5rem;
+  gap: 0.5rem;
   margin: 0 auto;
 
   @media (max-width: 768px) {

@@ -34,8 +34,8 @@ function onDrop() {
 
 <style scoped>
 .card {
-  margin-bottom: 1rem;
-  height: 80vh;
+  margin-bottom: 0.5rem;
+  height: 70vh;
 }
 .card-body {
   padding: 0;
