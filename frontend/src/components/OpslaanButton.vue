@@ -26,6 +26,11 @@ async function handleClick() {
 
 <style scoped>
 /* Add any specific styles for the Opslaan button here */
+.btn {
+  background-color: rgba(60, 57, 80, 1);
+  border-color: rgba(60, 57, 80, 1);
+}
+
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
