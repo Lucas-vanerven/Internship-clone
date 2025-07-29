@@ -33,14 +33,19 @@ async function handleSaveGroups() {
   <div class="page-container">
     <div class="content">
       <main class="block">
-        <h2>Factor Group Calculator</h2>
         <GroupsGrid ref="groupsGridRef" />
+        
+        <div class="footer-section">
+          <div class="logo-container">
+            <img src="../assets/AR.ico" alt="Company Logo" class="company-logo" />
+          </div>
+          
+          <div class="actions">
+            <AnnulerenButton />
+            <OpslaanButton @click="handleSaveGroups" />
+          </div>
+        </div>
       </main>
-    </div>
-    
-    <div class="actions">
-      <AnnulerenButton />
-      <OpslaanButton @click="handleSaveGroups" />
     </div>
   </div>
 </template>
@@ -50,52 +55,67 @@ async function handleSaveGroups() {
 .page-container {
   min-height: 100vh;
   display: flex;
-  position: relative;
+  flex-direction: column;
 }
 
 /* Content area */
 .content {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-direction: column;
   margin: 30px 2% 0 2%;
   flex: 1;
 }
 
 main {
-  flex-grow: 2;
   width: 100%;
-  max-width: 70%;
+}
+
+/* Footer section with logo and buttons */
+.footer-section {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+  padding: 20px 0;
+}
+
+/* Logo positioning - centered across full page width */
+.logo-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.company-logo {
+  height: 40px;
+  width: auto;
 }
 
 /* Actions positioned on the right */
 .actions {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
   display: flex;
   gap: 10px;
-  z-index: 10;
 }
 
 @media (max-width: 900px) {
   .content {
-    flex-direction: column;
     margin-right: 10px;
   }
   
   main {
     width: 100%;
-    max-width: 98%;
+  }
+  
+  .footer-section {
+    flex-direction: column;
+    gap: 15px;
   }
   
   .actions {
-    position: relative;
-    bottom: auto;
-    right: auto;
     justify-content: center;
-    margin-top: 20px;
   }
 }
 </style>
