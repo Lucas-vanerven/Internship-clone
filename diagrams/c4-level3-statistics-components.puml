@@ -1,0 +1,32 @@
+@startuml C4_Component_Statistics
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component Diagram - Statistical Functions
+
+Container(api_endpoints, "API Endpoints")
+
+Container_Boundary(stats, "Statistical Functions") {
+    Component(cronbach_alpha, "Cronbach's Alpha Calculator", "Python Function", "Calculates reliability coefficient for item groups")
+    Component(descriptive_stats, "Descriptive Statistics", "Python Function", "Computes mean, variance, std deviation")
+    Component(correlation_matrix, "Correlation Matrix", "Python Function", "Calculates inter-item correlations")
+    Component(item_analysis, "Item Analysis", "Python Function", "Item-total correlations and item statistics")
+    Component(data_validator, "Data Validator", "Python Function", "Validates input data quality and format")
+    Component(result_formatter, "Result Formatter", "Python Function", "Formats statistical output for API response")
+}
+
+ComponentDb(pandas, "Pandas", "Python Library", "Data manipulation and analysis")
+ComponentDb(numpy, "NumPy", "Python Library", "Numerical computing and statistics")
+ComponentDb(polars, "Polars", "Python Library", "High-performance data processing")
+
+Rel(api_endpoints, cronbach_alpha, "Calls")
+Rel(api_endpoints, descriptive_stats, "Calls")
+Rel(api_endpoints, correlation_matrix, "Calls")
+Rel(api_endpoints, item_analysis, "Calls")
+Rel(cronbach_alpha, data_validator, "Validates input")
+Rel(cronbach_alpha, result_formatter, "Formats output")
+Rel(cronbach_alpha, pandas, "Uses")
+Rel(cronbach_alpha, numpy, "Uses")
+Rel(descriptive_stats, polars, "Uses")
+Rel(correlation_matrix, pandas, "Uses")
+
+@enduml

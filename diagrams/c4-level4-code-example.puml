@@ -1,0 +1,26 @@
+@startuml C4_Code_CronbachAlpha
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Code Diagram - Cronbach's Alpha Function
+
+Container_Boundary(cronbach_function, "cronbach_alpha Function") {
+    Component(input_validation, "Input Validation", "Python Code", "Validates DataFrame has >= 2 columns and sufficient data")
+    Component(variance_calculation, "Variance Calculation", "Python Code", "Calculates item variances and total variance")
+    Component(alpha_formula, "Alpha Formula", "Python Code", "Applies Cronbach's alpha mathematical formula")
+    Component(error_handling, "Error Handling", "Python Code", "Handles edge cases and returns appropriate errors")
+    Component(result_rounding, "Result Rounding", "Python Code", "Rounds result to 3 decimal places")
+}
+
+ComponentDb(pandas_df, "pandas.DataFrame", "Data Structure", "Input data with items as columns, observations as rows")
+ComponentDb(numpy_calc, "numpy calculations", "Mathematical Operations", "Statistical computations")
+
+Rel(pandas_df, input_validation, "Input")
+Rel(input_validation, variance_calculation, "Valid data")
+Rel(variance_calculation, alpha_formula, "Variance values")
+Rel(alpha_formula, result_rounding, "Raw alpha value")
+Rel(result_rounding, "Float", "Final result")
+Rel(variance_calculation, numpy_calc, "Uses")
+Rel(alpha_formula, numpy_calc, "Uses")
+Rel(input_validation, error_handling, "On validation failure")
+
+@enduml

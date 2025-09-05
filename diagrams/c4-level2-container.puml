@@ -1,0 +1,28 @@
+@startuml C4_Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Container Diagram for Cronbach's Alpha Web Application
+
+Person(user, "User", "Researcher or Analyst")
+
+Container_Boundary(webapp, "Cronbach's Alpha Web Application") {
+    Container(spa, "Single Page Application", "Vue.js 3", "Provides the user interface for data upload, factor grouping, and analysis visualization")
+    Container(api, "API Server", "FastAPI/Python", "Handles HTTP requests, file uploads, statistical calculations, and data management")
+    Container(static_files, "Static File Server", "FastAPI StaticFiles", "Serves built frontend assets and uploaded data files")
+}
+
+ContainerDb(file_storage, "File Storage", "Local Filesystem", "Stores uploaded Excel/CSV files and generated reports")
+ContainerDb(redis_cache, "Cache", "Redis", "Stores session data and temporary calculation results")
+ContainerDb(database, "Database", "MongoDB", "Stores analysis metadata, factor groups, and historical results")
+
+Container_Ext(arpy, "ArpY Module", "Python Package", "External data processing library for research data")
+
+Rel(user, spa, "Uses", "HTTPS")
+Rel(spa, api, "Makes API calls", "JSON/HTTPS")
+Rel(spa, static_files, "Loads assets", "HTTPS")
+Rel(api, file_storage, "Reads/writes files", "File I/O")
+Rel(api, redis_cache, "Caches data", "Redis Protocol")
+Rel(api, database, "Stores/retrieves data", "MongoDB Wire Protocol")
+Rel(api, arpy, "Processes research data", "Python imports")
+
+@enduml
