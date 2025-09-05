@@ -1,0 +1,40 @@
+@startuml C4_Component_Backend
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component Diagram - FastAPI Backend
+
+ContainerDb(file_storage, "File Storage")
+ContainerDb(redis_cache, "Redis Cache")
+ContainerDb(database, "MongoDB")
+Container_Ext(arpy, "ArpY Module")
+
+Container_Boundary(api, "API Server") {
+    Component(main_app, "FastAPI Application", "FastAPI", "Main application instance with middleware and routing")
+    Component(api_router, "API Router", "FastAPI Router", "Groups all API endpoints under /api prefix")
+    Component(cors_middleware, "CORS Middleware", "FastAPI Middleware", "Handles cross-origin requests from frontend")
+    Component(static_middleware, "Static Files Middleware", "FastAPI", "Serves frontend assets and uploaded files")
+    Component(upload_handler, "File Upload Handler", "FastAPI Endpoint", "Processes Excel/CSV file uploads")
+    Component(factor_endpoints, "Factor Group Endpoints", "FastAPI Endpoints", "Manages factor group creation and storage")
+    Component(calc_endpoints, "Calculation Endpoints", "FastAPI Endpoints", "Handles Cronbach's alpha calculations")
+    Component(data_fetcher, "Data Fetcher", "ArpY Integration", "Retrieves data from external research systems")
+    Component(score_calculator, "Score Calculator", "Python Module", "Statistical calculation functions")
+    Component(upload_functions, "Upload Functions", "Python Module", "File processing and validation utilities")
+    Component(templates, "Jinja2 Templates", "Template Engine", "Server-side HTML templating")
+}
+
+Rel(main_app, api_router, "Includes")
+Rel(main_app, cors_middleware, "Uses")
+Rel(main_app, static_middleware, "Uses")
+Rel(main_app, templates, "Uses")
+Rel(api_router, upload_handler, "Routes to")
+Rel(api_router, factor_endpoints, "Routes to")
+Rel(api_router, calc_endpoints, "Routes to")
+Rel(upload_handler, upload_functions, "Uses")
+Rel(upload_handler, file_storage, "Saves files to")
+Rel(factor_endpoints, database, "Stores groups in")
+Rel(calc_endpoints, score_calculator, "Uses")
+Rel(calc_endpoints, redis_cache, "Caches results in")
+Rel(data_fetcher, arpy, "Fetches data from")
+Rel(data_fetcher, database, "Queries")
+
+@enduml

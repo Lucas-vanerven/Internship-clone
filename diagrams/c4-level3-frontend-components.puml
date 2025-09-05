@@ -1,0 +1,29 @@
+@startuml C4_Component_Frontend
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component Diagram - Vue.js Frontend
+
+Container(api, "API Server", "FastAPI")
+
+Container_Boundary(spa, "Single Page Application") {
+    Component(router, "Vue Router", "Vue.js Plugin", "Handles client-side routing between pages")
+    Component(upload_page, "Upload Page", "Vue Component", "File upload interface for Excel/CSV data")
+    Component(factor_calc, "Factor Calculator", "Vue Component", "Main analysis interface with drag-and-drop grouping")
+    Component(home_page, "Home Page", "Vue Component", "Landing page and navigation")
+    Component(db_combiner, "Database Combiner", "Vue Component", "Interface for combining multiple data sources")
+    Component(api_service, "API Service", "JavaScript Module", "Centralized HTTP client for backend communication")
+    Component(draggable, "Vue Draggable", "Third-party Component", "Drag-and-drop functionality for factor grouping")
+    Component(bootstrap, "Bootstrap UI", "CSS Framework", "Responsive UI components and styling")
+}
+
+Rel(router, upload_page, "Routes to")
+Rel(router, factor_calc, "Routes to")
+Rel(router, home_page, "Routes to")
+Rel(router, db_combiner, "Routes to")
+Rel(upload_page, api_service, "Uploads files")
+Rel(factor_calc, api_service, "Calculates statistics")
+Rel(factor_calc, draggable, "Uses for grouping")
+Rel(db_combiner, api_service, "Fetches data")
+Rel(api_service, api, "HTTP requests", "JSON/HTTPS")
+
+@enduml

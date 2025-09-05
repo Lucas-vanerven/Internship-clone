@@ -1,0 +1,23 @@
+@startuml C4_Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title System Context Diagram for Cronbach's Alpha Web Application
+
+Person(researcher, "Researcher/Analyst", "Uses the application to analyze survey data and calculate Cronbach's alpha reliability coefficients")
+Person(admin, "System Administrator", "Manages the application deployment and monitors system health")
+
+System(cronbach_app, "Cronbach's Alpha Web Application", "Provides web-based interface for statistical reliability analysis of survey data")
+
+System_Ext(file_system, "File System", "Stores uploaded data files and analysis results")
+System_Ext(arpy_system, "ArpY Data System", "External data processing and storage system for research data")
+System_Ext(redis, "Redis Cache", "Caches session data and temporary analysis results")
+System_Ext(mongodb, "MongoDB Database", "Stores persistent data and analysis history")
+
+Rel(researcher, cronbach_app, "Uploads data files, creates factor groups, analyzes reliability", "HTTPS")
+Rel(admin, cronbach_app, "Monitors and maintains", "HTTPS")
+Rel(cronbach_app, file_system, "Reads/writes data files", "File I/O")
+Rel(cronbach_app, arpy_system, "Fetches research data", "HTTP/REST")
+Rel(cronbach_app, redis, "Caches session data", "Redis Protocol")
+Rel(cronbach_app, mongodb, "Stores analysis data", "MongoDB Protocol")
+
+@enduml
