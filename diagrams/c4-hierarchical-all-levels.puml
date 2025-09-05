@@ -1,0 +1,102 @@
+@startuml C4_Hierarchical_All_Levels
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Multi-Level C4 Diagram - Hierarchical View\nCronbach's Alpha Web Application
+
+!define LEVEL1_COLOR #E1F5FE
+!define LEVEL2_COLOR #F3E5F5
+!define LEVEL3_COLOR #E8F5E8
+
+' ==== LEVEL 1: SYSTEM CONTEXT ====
+rectangle "LEVEL 1: SYSTEM CONTEXT" as level1 LEVEL1_COLOR {
+    Person(researcher, "Project manager", "Analyzes survey data for reliability")
+    Person(admin, "IT Lead", "Manages and monitors the system")
+    
+    System(cronbach_app, "Cronbach's Alpha\nWeb Application", "Statistical reliability analysis platform")
+    
+    System_Ext(external_db, "External Systems", "MongoDB, Redis, File Storage, ArpY")
+}
+
+' ==== LEVEL 2: CONTAINER VIEW ====
+rectangle "LEVEL 2: CONTAINERS" as level2 LEVEL2_COLOR {
+    Container(spa_container, "Single Page Application", "Vue.js 3", "User interface for data analysis")
+    Container(api_container, "API Server", "FastAPI/Python", "Business logic and calculations")
+    Container(static_container, "Static File Server", "FastAPI", "Serves assets and files")
+    
+    ContainerDb(file_db, "File Storage", "Filesystem", "Data files")
+    ContainerDb(cache_db, "Cache", "Redis", "Session data")
+    ContainerDb(meta_db, "Database", "MongoDB", "Metadata")
+}
+
+' ==== LEVEL 3: COMPONENT VIEW ====
+rectangle "LEVEL 3: COMPONENTS" as level3 LEVEL3_COLOR {
+    
+    ' Frontend Components
+    rectangle "Frontend Components" as frontend_comps {
+        Component(upload_page, "Upload Page", "Vue Component", "File upload UI")
+        Component(factor_page, "Factor Calculator", "Vue Component", "Main analysis UI")
+        Component(results_page, "Results Display", "Vue Component", "Shows statistics")
+        Component(api_service, "API Service", "JS Module", "HTTP client")
+    }
+    
+    ' Backend Components  
+    rectangle "Backend Components" as backend_comps {
+        Component(upload_handler, "Upload Handler", "FastAPI Route", "File processing")
+        Component(calc_engine, "Calculation Engine", "FastAPI Route", "Statistics API")
+        Component(data_manager, "Data Manager", "FastAPI Route", "CRUD operations")
+    }
+    
+    ' Statistics Components
+    rectangle "Statistics Engine" as stats_comps {
+        Component(cronbach_core, "Cronbach Calculator", "Python Class", "Alpha computation")
+        Component(data_validator, "Data Validator", "Python Module", "Input validation")
+        Component(factor_grouper, "Factor Grouper", "Python Module", "Item grouping")
+    }
+}
+
+' ==== LEVEL 4: CODE EXAMPLE ====
+rectangle "LEVEL 4: CODE STRUCTURE (Example)" as level4 #FFF3E0 {
+    Component(cronbach_function, "calculate_cronbach_alpha()", "Python Function", "Core calculation logic")
+    Component(variance_calc, "calculate_variance()", "Helper Function", "Statistical variance")
+    Component(correlation_calc, "item_correlation()", "Helper Function", "Item correlations")
+}
+
+' Level 1 Relationships
+Rel(researcher, cronbach_app, "Uses for data analysis", "HTTPS")
+Rel(admin, cronbach_app, "Monitors and maintains", "HTTPS")
+Rel(cronbach_app, external_db, "Stores and retrieves data")
+
+' Level 2 Relationships
+Rel(cronbach_app, spa_container, "Contains")
+Rel(cronbach_app, api_container, "Contains") 
+Rel(cronbach_app, static_container, "Contains")
+Rel(spa_container, api_container, "API calls", "JSON/HTTPS")
+Rel(api_container, file_db, "File operations")
+Rel(api_container, cache_db, "Caching")
+Rel(api_container, meta_db, "Data persistence")
+
+' Level 3 Relationships
+Rel(spa_container, upload_page, "Contains")
+Rel(spa_container, factor_page, "Contains")
+Rel(spa_container, results_page, "Contains")
+Rel(api_container, upload_handler, "Contains")
+Rel(api_container, calc_engine, "Contains")
+Rel(api_container, data_manager, "Contains")
+
+Rel(upload_page, upload_handler, "Uploads files")
+Rel(factor_page, calc_engine, "Requests calculations")
+Rel(calc_engine, cronbach_core, "Uses")
+Rel(cronbach_core, data_validator, "Validates input")
+Rel(cronbach_core, factor_grouper, "Groups factors")
+
+' Level 4 Relationships
+Rel(cronbach_core, cronbach_function, "Implements")
+Rel(cronbach_function, variance_calc, "Calls")
+Rel(cronbach_function, correlation_calc, "Calls")
+
+' Layout hints
+LAYOUT_TOP_DOWN()
+
+@enduml

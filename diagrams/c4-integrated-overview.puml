@@ -1,0 +1,98 @@
+@startuml C4_Integrated_Overview
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title C4 Model - Integrated Overview (All Levels)\nCronbach's Alpha Web Application
+
+' External Actors
+Person(researcher, "Project manager", "Analyzes survey data")
+Person(admin, "IT Lead", "System management")
+
+' System Boundary containing all internal elements
+System_Boundary(system, "Cronbach's Alpha Web Application") {
+    
+    ' Container: Frontend with its components
+    Container_Boundary(frontend, "Vue.js Frontend") {
+        Component(home, "Home Page", "Vue", "Landing")
+        Component(upload, "Upload", "Vue", "File upload")
+        Component(calculator, "Calculator", "Vue", "Main analysis")
+        Component(results, "Results", "Vue", "Display output")
+        Component(api_client, "API Client", "Axios", "HTTP requests")
+    }
+    
+    ' Container: Backend API with components
+    Container_Boundary(backend, "FastAPI Backend") {
+        Component(auth, "Auth Handler", "FastAPI", "Authentication")
+        Component(file_handler, "File Handler", "FastAPI", "Upload processing")
+        Component(analysis_api, "Analysis API", "FastAPI", "Main calculations")
+        Component(data_api, "Data API", "FastAPI", "CRUD operations")
+        
+        ' Nested: Statistics Engine
+        Container_Boundary(stats, "Statistics Engine") {
+            Component(cronbach, "Cronbach Alpha", "Python", "Core calculation")
+            Component(validator, "Data Validator", "Pandas", "Input validation")
+            Component(processor, "Data Processor", "NumPy", "Data transformation")
+            Component(exporter, "Report Exporter", "Python", "Results export")
+        }
+    }
+    
+    ' Container: Static Files
+    Container(static, "Static Server", "FastAPI", "Assets & files")
+}
+
+' External Systems
+ContainerDb(files, "File System", "Local Storage", "Data files & reports")
+ContainerDb(cache, "Redis", "In-Memory Cache", "Sessions & temp data")
+ContainerDb(database, "MongoDB", "Document DB", "Metadata & history")
+System_Ext(arpy, "ArpY System", "External Library", "Research data processing")
+
+' User Interactions (Level 1)
+Rel(researcher, home, "Accesses application", "HTTPS")
+Rel(researcher, upload, "Uploads data files", "HTTPS")
+Rel(researcher, calculator, "Performs analysis", "HTTPS")
+Rel(admin, system, "Monitors & maintains", "HTTPS")
+
+' Frontend Flow (Level 3)
+Rel(home, upload, "Navigate to upload")
+Rel(upload, calculator, "Proceed to analysis")
+Rel(calculator, results, "View results")
+Rel(calculator, api_client, "Make requests")
+Rel(upload, api_client, "Upload files")
+
+' API Communications (Level 2 & 3)
+Rel(api_client, auth, "Authentication", "JWT")
+Rel(api_client, file_handler, "File upload", "Multipart")
+Rel(api_client, analysis_api, "Analysis requests", "JSON")
+Rel(api_client, data_api, "Data operations", "REST")
+
+' Backend Processing (Level 3)
+Rel(file_handler, processor, "Process uploaded data")
+Rel(analysis_api, validator, "Validate input")
+Rel(validator, cronbach, "Calculate reliability")
+Rel(cronbach, processor, "Transform data")
+Rel(analysis_api, exporter, "Generate reports")
+
+' Data Storage (Level 2)
+Rel(file_handler, files, "Store uploads", "File I/O")
+Rel(data_api, database, "Persist metadata", "MongoDB")
+Rel(analysis_api, cache, "Cache results", "Redis")
+Rel(exporter, files, "Save reports", "File I/O")
+
+' External Integration
+Rel(processor, arpy, "Use external processing", "Python import")
+Rel(static, files, "Serve static assets", "HTTP")
+
+' Static file serving
+Rel(frontend, static, "Load assets", "HTTP")
+
+' Legend
+legend right
+  |= Color |= Level |= Description |
+  |<#TECHNOLOGY>| Level 1 | System Context & Users |
+  |<#PERSON>| Level 2 | Containers & External Systems |
+  |<#APPLICATION>| Level 3 | Components & Internal Logic |
+  |<#CONTAINER>| All | Boundaries & Groupings |
+endlegend
+
+@enduml

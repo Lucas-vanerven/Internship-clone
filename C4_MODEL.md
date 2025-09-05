@@ -13,7 +13,7 @@ The C4 model is a lean graphical notation technique for modeling the architectur
 
 ## System Overview
 
-The Cronbach's Alpha Web Application is a statistical analysis tool designed to calculate Cronbach's alpha reliability coefficients for survey data. It provides a web-based interface for researchers and analysts to upload data, organize items into factor groups, and compute reliability statistics.
+The Cronbach's Alpha Web Application is a statistical analysis tool designed to calculate Cronbach's alpha reliability coefficients for survey data. It provides a web-based interface for project managers and analysts to upload data, organize items into factor groups, and compute reliability statistics.
 
 ---
 
@@ -25,8 +25,8 @@ The Cronbach's Alpha Web Application is a statistical analysis tool designed to 
 
 title System Context Diagram for Cronbach's Alpha Web Application
 
-Person(researcher, "Researcher/Analyst", "Uses the application to analyze survey data and calculate Cronbach's alpha reliability coefficients")
-Person(admin, "System Administrator", "Manages the application deployment and monitors system health")
+Person(researcher, "Project manager", "Uses the application to analyze survey data and calculate Cronbach's alpha reliability coefficients")
+Person(admin, "IT Lead", "Manages the application deployment and monitors system health")
 
 System(cronbach_app, "Cronbach's Alpha Web Application", "Provides web-based interface for statistical reliability analysis of survey data")
 
@@ -47,8 +47,8 @@ Rel(cronbach_app, mongodb, "Stores analysis data", "MongoDB Protocol")
 
 ### Key External Actors and Systems:
 
-- **Researchers/Analysts**: Primary users who upload survey data and perform reliability analysis
-- **System Administrators**: Manage and maintain the application
+- **Project managers**: Primary users who upload survey data and perform reliability analysis
+- **IT Leads**: Manage and maintain the application
 - **File System**: Local storage for uploaded files and results
 - **ArpY Data System**: External research data management system
 - **Redis**: Caching layer for performance optimization
@@ -64,7 +64,7 @@ Rel(cronbach_app, mongodb, "Stores analysis data", "MongoDB Protocol")
 
 title Container Diagram for Cronbach's Alpha Web Application
 
-Person(user, "User", "Researcher or Analyst")
+Person(user, "Project manager", "Project manager or Analyst")
 
 Container_Boundary(webapp, "Cronbach's Alpha Web Application") {
     Container(spa, "Single Page Application", "Vue.js 3", "Provides the user interface for data upload, factor grouping, and analysis visualization")

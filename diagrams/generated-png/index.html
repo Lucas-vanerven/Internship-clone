@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C4 Model Diagrams - Cronbach's Alpha Web App</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; padding: 20px; background: #f5f5f5; line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { color: #333; text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        
+        .section { margin: 40px 0; }
+        .section h2 { 
+            color: #2c3e50; border-bottom: 3px solid #3498db; 
+            padding-bottom: 10px; margin-bottom: 20px;
+        }
+        
+        .diagram-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 20px; }
+        .diagram { 
+            background: white; padding: 20px; border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        .diagram:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .diagram h3 { color: #34495e; margin-top: 0; }
+        .diagram img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
+        .level { background: #e3f2fd; padding: 5px 10px; border-radius: 4px; font-size: 0.9em; display: inline-block; margin-bottom: 10px; }
+        .combined { background: #f3e5f5; }
+        .overview { background: #e8f5e8; }
+        
+        .description { color: #555; margin: 10px 0; font-style: italic; }
+        .features { background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 10px 0; }
+        .features ul { margin: 5px 0; padding-left: 20px; }
+        .features li { margin: 5px 0; }
+        
+        .navigation { position: sticky; top: 20px; background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .nav-links { display: flex; gap: 15px; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; color: #3498db; padding: 5px 10px; border-radius: 4px; }
+        .nav-links a:hover { background: #e3f2fd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ C4 Model Architecture Diagrams</h1>
+        <p class="subtitle"><strong>Cronbach's Alpha Web Application</strong> - Complete Architecture Documentation</p>
+        
+        <div class="navigation">
+            <strong>Quick Navigation:</strong>
+            <div class="nav-links">
+                <a href="#combined">🔄 Combined Views</a>
+                <a href="#individual">📊 Individual Levels</a>
+                <a href="#context">🌍 Context</a>
+                <a href="#container">📦 Containers</a>
+                <a href="#components">⚙️ Components</a>
+                <a href="#code">💻 Code</a>
+            </div>
+        </div>
+
+        <div class="section" id="combined">
+            <h2>🔄 Multi-Level Combined Views</h2>
+            <p>These diagrams show multiple C4 levels in a single view, providing comprehensive architecture overviews.</p>
+            <div class="diagram-grid">
+
+                <div class="diagram">
+                    <h3>All Levels Combined</h3>
+                    <span class="level combined">Multi-Level View</span>
+                    <p class="description">Complete system view showing context, containers, and key components in one integrated diagram</p>
+                    <div class="features">
+                        <strong>Key Features:</strong>
+                        <ul>
+                            <li>System context with external actors</li><li>Container boundaries and relationships</li><li>Key components within each container</li><li>Data flow across all levels</li>
+                        </ul>
+                    </div>
+                    <img src="c4-all-levels-combined.png" alt="All Levels Combined" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Hierarchical Multi-Level View</h3>
+                    <span class="level combined">Multi-Level View</span>
+                    <p class="description">Structured presentation showing clear separation between C4 levels</p>
+                    <div class="features">
+                        <strong>Key Features:</strong>
+                        <ul>
+                            <li>Clear level separation with color coding</li><li>Top-down hierarchical layout</li><li>Explicit level relationships</li><li>Code structure examples</li>
+                        </ul>
+                    </div>
+                    <img src="c4-hierarchical-all-levels.png" alt="Hierarchical Multi-Level View" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Integrated System Overview</h3>
+                    <span class="level combined">Multi-Level View</span>
+                    <p class="description">Compact integration showing the complete system with all major components</p>
+                    <div class="features">
+                        <strong>Key Features:</strong>
+                        <ul>
+                            <li>Nested container boundaries</li><li>Detailed component interactions</li><li>External system integrations</li><li>Comprehensive data flow</li>
+                        </ul>
+                    </div>
+                    <img src="c4-integrated-overview.png" alt="Integrated System Overview" />
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="section" id="individual">
+            <h2>📊 Individual Level Diagrams</h2>
+            <p>Traditional C4 model diagrams showing each level separately with detailed focus.</p>
+            <div class="diagram-grid">
+
+                <div class="diagram">
+                    <h3>System Context</h3>
+                    <span class="level">Level 1: System Context</span>
+                    <p class="description">Shows how the Cronbach's Alpha application fits into the broader ecosystem with users and external systems</p>
+                    <div class="features">
+                        <strong>Focus:</strong> External perspective and system boundaries
+                    </div>
+                    <img src="c4-level1-context.png" alt="System Context" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Container Architecture</h3>
+                    <span class="level">Level 2: Container</span>
+                    <p class="description">High-level technology choices showing Vue.js frontend, FastAPI backend, and data storage systems</p>
+                    <div class="features">
+                        <strong>Focus:</strong> Technology stack and container relationships
+                    </div>
+                    <img src="c4-level2-container.png" alt="Container Architecture" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Frontend Components</h3>
+                    <span class="level">Level 3: Components</span>
+                    <p class="description">Vue.js single-page application component structure with routing and user interface elements</p>
+                    <div class="features">
+                        <strong>Focus:</strong> Frontend component organization
+                    </div>
+                    <img src="c4-level3-frontend-components.png" alt="Frontend Components" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Backend Components</h3>
+                    <span class="level">Level 3: Components</span>
+                    <p class="description">FastAPI server components handling API endpoints, business logic, and data processing</p>
+                    <div class="features">
+                        <strong>Focus:</strong> Backend service architecture
+                    </div>
+                    <img src="c4-level3-backend-components.png" alt="Backend Components" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Statistics Engine</h3>
+                    <span class="level">Level 3: Components</span>
+                    <p class="description">Core statistical calculation components for Cronbach's alpha analysis and data processing</p>
+                    <div class="features">
+                        <strong>Focus:</strong> Statistical computation logic
+                    </div>
+                    <img src="c4-level3-statistics-components.png" alt="Statistics Engine" />
+                </div>
+
+                <div class="diagram">
+                    <h3>Code Structure</h3>
+                    <span class="level overview">Level 4: Code</span>
+                    <p class="description">Internal implementation details of the Cronbach's alpha calculation function</p>
+                    <div class="features">
+                        <strong>Focus:</strong> Code-level implementation
+                    </div>
+                    <img src="c4-level4-code-example.png" alt="Code Structure" />
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📖 About C4 Model</h2>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <p>The C4 model is a lean graphical notation technique for modeling software architecture. It consists of four hierarchical levels:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 4px;">
+                        <strong>Level 1: System Context</strong><br>
+                        Shows how the software system fits into the world around it
+                    </div>
+                    <div style="background: #f3e5f5; padding: 15px; border-radius: 4px;">
+                        <strong>Level 2: Container</strong><br>
+                        Shows the high-level technology choices and responsibilities
+                    </div>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 4px;">
+                        <strong>Level 3: Component</strong><br>
+                        Shows how containers are made up of components
+                    </div>
+                    <div style="background: #fff3e0; padding: 15px; border-radius: 4px;">
+                        <strong>Level 4: Code</strong><br>
+                        Shows how components are implemented (optional)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

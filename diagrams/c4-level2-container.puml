@@ -3,7 +3,7 @@
 
 title Container Diagram for Cronbach's Alpha Web Application
 
-Person(user, "User", "Researcher or Analyst")
+Person(user, "Project manager", "Project manager or Analyst")
 
 Container_Boundary(webapp, "Cronbach's Alpha Web Application") {
     Container(spa, "Single Page Application", "Vue.js 3", "Provides the user interface for data upload, factor grouping, and analysis visualization")

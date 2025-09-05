@@ -1,0 +1,87 @@
+@startuml C4_All_Levels_Combined
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title C4 Model - All Levels Combined\nCronbach's Alpha Web Application
+
+' Level 1: External Context
+Person(researcher, "Project manager", "Primary user analyzing survey data")
+Person(admin, "IT Lead", "Manages application deployment")
+
+' Level 2: System Boundary with Internal Containers
+System_Boundary(cronbach_system, "Cronbach's Alpha Web Application") {
+    
+    ' Frontend Container with Key Components
+    Container_Boundary(frontend_container, "Frontend (Vue.js SPA)") {
+        Component(upload_comp, "Upload Component", "Vue.js", "File upload interface")
+        Component(factor_calc_comp, "Factor Calculator", "Vue.js", "Main analysis interface")
+        Component(results_comp, "Results Display", "Vue.js", "Shows calculations")
+        Component(router_comp, "Vue Router", "Routing", "Navigation")
+    }
+    
+    ' Backend Container with Key Components
+    Container_Boundary(backend_container, "Backend (FastAPI Server)") {
+        Component(upload_api, "Upload API", "FastAPI", "Handles file uploads")
+        Component(calc_api, "Calculation API", "FastAPI", "Statistical computations")
+        Component(data_api, "Data Management API", "FastAPI", "CRUD operations")
+        
+        ' Statistics Engine Components
+        Container_Boundary(stats_engine, "Statistics Engine") {
+            Component(cronbach_calc, "Cronbach Calculator", "Python", "Core alpha calculation")
+            Component(data_processor, "Data Processor", "Pandas", "Data cleaning & validation")
+            Component(factor_analyzer, "Factor Analyzer", "Python", "Factor grouping logic")
+        }
+    }
+    
+    ' Static File Server
+    Container(static_server, "Static File Server", "FastAPI", "Serves frontend assets")
+}
+
+' External Systems
+ContainerDb(file_storage, "File Storage", "Local Filesystem", "Uploaded files & reports")
+ContainerDb(redis_cache, "Redis Cache", "In-Memory DB", "Session & temp data")
+ContainerDb(mongodb, "MongoDB", "Document DB", "Analysis metadata & history")
+Container_Ext(arpy_system, "ArpY Module", "Python Package", "External data processing")
+
+' Level 1 Relationships (User to System)
+Rel(researcher, cronbach_system, "Analyzes survey data", "HTTPS")
+Rel(admin, cronbach_system, "Administers", "HTTPS")
+
+' Level 2 Relationships (Between Containers)
+Rel(researcher, frontend_container, "Uses interface", "HTTPS")
+Rel(frontend_container, backend_container, "API calls", "JSON/HTTPS")
+Rel(frontend_container, static_server, "Loads assets", "HTTPS")
+Rel(backend_container, file_storage, "File I/O", "Local")
+Rel(backend_container, redis_cache, "Cache operations", "Redis Protocol")
+Rel(backend_container, mongodb, "Data persistence", "MongoDB Protocol")
+Rel(backend_container, arpy_system, "Data processing", "Python imports")
+
+' Level 3 Relationships (Component Level)
+' Frontend Component Flow
+Rel(router_comp, upload_comp, "Routes to")
+Rel(router_comp, factor_calc_comp, "Routes to")
+Rel(upload_comp, upload_api, "Upload files")
+Rel(factor_calc_comp, calc_api, "Calculate stats")
+Rel(factor_calc_comp, results_comp, "Display results")
+
+' Backend Component Flow
+Rel(upload_api, data_processor, "Process uploaded data")
+Rel(calc_api, factor_analyzer, "Analyze factors")
+Rel(factor_analyzer, cronbach_calc, "Calculate alpha")
+Rel(data_api, mongodb, "Store/retrieve data")
+Rel(calc_api, redis_cache, "Cache results")
+
+' Cross-container component relationships
+Rel(upload_comp, upload_api, "HTTP POST")
+Rel(factor_calc_comp, calc_api, "HTTP GET/POST")
+Rel(results_comp, data_api, "HTTP GET")
+
+' Data flow indicators
+Rel(data_processor, file_storage, "Read files", "File I/O")
+Rel(cronbach_calc, redis_cache, "Cache calculations", "Redis")
+
+' Layout hints
+LAYOUT_LEFT_RIGHT()
+
+@enduml

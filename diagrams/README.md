@@ -11,14 +11,58 @@ This directory contains PlantUML diagrams representing the C4 model for the Cron
 - **c4-level3-statistics-components.puml** - Component diagram for the statistical functions
 - **c4-level4-code-example.puml** - Code-level diagram showing the internal structure of the Cronbach's alpha function
 
+## Quick Start 🚀
+
+### 1. VS Code Extension (Recommended)
+The PlantUML extension is installed and ready to use:
+- Open any `.puml` file
+- Press `Alt+D` to preview the diagram
+- Or right-click → "PlantUML: Preview Current Diagram"
+
+### 2. Generate PNG Images
+```powershell
+python generate-png-diagrams.py
+```
+This creates PNG images and an HTML viewer at `generated-png/index.html`
+
+### 3. Generate ASCII Art
+```powershell
+python generate-ascii-diagrams.py
+```
+This creates text-based diagrams in the `ascii-diagrams` folder
+
+## Available Scripts
+
+### `generate-png-diagrams.py`
+- Generates PNG images from all `.puml` files
+- Uses the online PlantUML server
+- Creates an HTML viewer for easy browsing
+- Output: `generated-png/` directory
+
+### `generate-ascii-diagrams.py`
+- Creates ASCII art representations
+- Perfect for documentation or terminals
+- Output: `ascii-diagrams/` directory
+
+### `extract-from-markdown.py`
+- Extracts PlantUML code from `C4_MODEL.md`
+- Keeps `.puml` files in sync with the main documentation
+- Useful when updating the markdown file
+
 ## How to Use
 
+### VS Code Integration ✅
+The PlantUML extension is already installed! Just:
+1. Open any `.puml` file
+2. Press `Alt+D` for preview
+3. Edit and see live updates
+
 ### Online Rendering
-You can render these diagrams online using:
+You can also render these diagrams online using:
 - [PlantUML Online Server](http://www.plantuml.com/plantuml/uml/)
 - [PlantText](https://www.planttext.com/)
 
-### Local Rendering
+### Local Rendering (Advanced)
 To render locally, you need:
 1. Java runtime
 2. PlantUML JAR file
@@ -28,9 +72,6 @@ To render locally, you need:
 # Example command to generate PNG
 java -jar plantuml.jar c4-level1-context.puml
 ```
-
-### VS Code Integration
-Install the "PlantUML" extension in VS Code to preview diagrams directly in the editor.
 
 ### C4 PlantUML Library
 These diagrams use the C4-PlantUML library which provides C4 model-specific notation. The library is automatically included via the `!include` statements at the top of each file.
